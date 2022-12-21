@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+    // "baseUrl": "./",
+    // "paths": {
+    //   "@/*": ["./src/*"],
+    //   "@components/*": ["./src/components/*"],
+    //   "@views/*": ["./src/views/*"],
+    //   "@utils/*": ["./src/utils/*"],
+    //   "@hooks/*": ["./src/hooks/*"],
+    //   "@assets/*": ["./src/assets/*"],
+    //   "@types/*": ["./src/types/*"],
+    //   "@test/*": ["./src/test/*"],
+    //   "@public/*": ["./public/*"]
+    // }
+  },
+  "include": ["src", "vite.config.ts", "vitest.config.ts"],
+  "types": [
+    "node",
+    "vitest",
+    "jest",
+    "@testing-library/jest-dom",
+    "jest-playwright-preset"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

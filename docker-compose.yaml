@@ -1,0 +1,13 @@
+services:
+    app:
+        build: ./
+        ports:
+            - "5173:5173"
+        volumes:
+            - ./src:/app/src
+            - ./public:/app/public
+        command: pnpm run dev
+        container_name: ztransfer_app
+        restart: unless-stopped
+        environment:
+            - CHOKIDAR_USEPOLLING=true
