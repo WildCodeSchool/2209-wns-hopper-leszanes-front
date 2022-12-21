@@ -46,3 +46,6 @@ rules:
     react/require-default-props: 'off'
     react/jsx-props-no-spreading: 'off'
     react/no-unescaped-entities: 'off'
+    prettier/prettier:
+        - error
+        - endOfLine: auto

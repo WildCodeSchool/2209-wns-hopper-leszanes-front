@@ -4,7 +4,7 @@ tabWidth: 2
 useTabs: false
 semi: true
 bracketSpacing: true
-endOfLine: lf
+endOfLine: auto
 overrides:
     - files: '*.yaml'
       options:
