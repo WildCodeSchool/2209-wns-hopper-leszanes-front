@@ -5,6 +5,23 @@
   background-color: $mainColor;
   padding-left: 25px;
 }
-.logo{
-    max-width: 60px;
+.logo {
+  max-width: 60px;
+}
+
+.profileButton {
+  margin-right: 20px;
+  margin-left: auto;
+  border: none;
+  border-radius: 70%;
+  box-shadow: 0 2px 4px darkslategray;
+  height: 50px;
+  width: 50px;
+  background-color: $accentuatedMainColor;
+    &:active{
+      background-color: $accentuatedMainColor;
+      box-shadow: 0 0 2px darkslategray;
+      transform: translateY(2px);
+    }
+
 }
