@@ -45,3 +45,4 @@ rules:
         - devDependencies: true
     react/require-default-props: 'off'
     react/jsx-props-no-spreading: 'off'
+    react/no-unescaped-entities: 'off'
