@@ -2,8 +2,18 @@ import styles from "./Navbar.module.scss";
 
 export const Navbar = () => {
   return (
-    <nav className={styles.header}>
-      <h1>Test</h1>
+    <nav className={styles.navbar}>
+      <ul className={styles.navLinks}>
+        <li>
+          <a href="#Accueil">Accueil</a>
+        </li>
+        <li>
+          <a href="#Fichiers">Mes fichiers</a>
+        </li>
+        <li>
+          <a href="#Contacts">Mes contacts</a>
+        </li>
+      </ul>
     </nav>
   );
 };
