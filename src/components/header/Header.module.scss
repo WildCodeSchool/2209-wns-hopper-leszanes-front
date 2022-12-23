@@ -1,30 +1,28 @@
 .header {
   display: flex;
-
-  align-items: center;
-  height: $headerHeight;
+  flex-wrap: wrap;
+  flex-direction: row;
   background-color: $mainColor;
-  padding-left: 20px;
+  height: $headerHeight;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 15px;
 }
 .logo {
-  max-width: 60px;
+  height: 60px;
+  width: 60px;
 }
 
-.profileButton {
-  margin-right: 20px;
-  margin-left: auto;
-  border: none;
-  border-radius: 70%;
-  box-shadow: 0 2px 4px darkslategray;
+.profileButton{
+  background-color: $accentuatedMainColor;
   height: 50px;
   width: 50px;
-  color: white;
-  background-color: $accentuatedMainColor;
-    &:active{
-      background-color: $accentuatedMainColor;
-      box-shadow: 0 0 2px darkslategray;
-      transform: translateY(2px);
-    }
+  border-radius: 50%;
+  padding: 5px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .responsiveHeader{

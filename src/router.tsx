@@ -19,25 +19,38 @@ export const router = createBrowserRouter([
         element: <HomeView />,
       },
       {
-        path: "profil",
+        path: "profile",
         element: (
           // <AuthProvider>
           <UserProfileView />
           // </AuthProvider>
         ),
       },
+      {
+        path: "upload",
+        element: <h1>Upload</h1>,
+      },
+      {
+        path: "files",
+        element: <h1>My files</h1>,
+      },
+      {
+        path: "contacts",
+        element: <h1>My contacts</h1>,
+      },
+      {
+        path: "login",
+        element: <LoginView />,
+        errorElement: <ErrorView />,
+      },
+      {
+        path: "register",
+        element: <RegisterView />,
+        errorElement: <ErrorView />,
+      },
     ],
   },
-  {
-    path: "login",
-    element: <LoginView />,
-    errorElement: <ErrorView />,
-  },
-  {
-    path: "register",
-    element: <RegisterView />,
-    errorElement: <ErrorView />,
-  },
+
   {
     path: "*",
     element: <NotFoundView />,

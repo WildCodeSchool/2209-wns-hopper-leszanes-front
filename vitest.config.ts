@@ -7,7 +7,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "jsdom",
-    setupFiles: "./src/test/setup.ts",
+    setupFiles: "./playwright.config.ts",
     testTimeout: 60_000,
     hookTimeout: 60_000,
   },

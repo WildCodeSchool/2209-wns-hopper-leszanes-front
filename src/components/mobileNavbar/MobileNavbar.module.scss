@@ -4,7 +4,7 @@
   bottom: 0;
   color: black;
   background-color: $mainColor;
-  height: 50px;
+  height: $headerHeight;
   display: flex;
 
   .navLinks {
@@ -16,8 +16,12 @@
     column-gap: 1rem;
   }
   a {
-    color: black;
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
+    align-items: center;
+    gap: 7px;
+    color: black;
     &:hover {
       color: $linkHoverColor;
     }
@@ -27,13 +31,13 @@
   background-color: $accentuatedMainColor;
   height: 50px;
   width: 50px;
+  padding: 5px;
   border-radius: 50%;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 }
-.uploadButton {
-    background-color: $accentuatedMainColor;
-    height: 50px;
-    width: 50px;
-    border-radius: 50%;
-    display: inline-block;
-  }
+  /*
+  button => flex center > * column
+  */

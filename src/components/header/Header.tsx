@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+import { User } from "lucide-react";
 import zanelogo from "../../assets/images/zanelogo.png";
 import styles from "./Header.module.scss";
 import { Navbar } from "../navbar/Navbar";
@@ -8,11 +10,11 @@ export const Header = () => {
     <div>
       <header className={styles.header}>
         <img src={zanelogo} alt="" className={styles.logo} />
-        <h1>Ztransfert</h1>
+        {/* <h1>Ztransfert</h1> */}
         <Navbar />
-        <button className={styles.profileButton} type="button">
-          Icon
-        </button>
+        <NavLink to="/profile" className={styles.profileButton}>
+          <User />
+        </NavLink>
       </header>
       <header className={styles.responsiveHeader}>
         <img src={zanelogo} alt="Ztransfert_logo" className={styles.logo} />

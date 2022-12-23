@@ -6,5 +6,9 @@
 
 .layout .main {
   background: $appBackground;
-  // min-height: calc(100vh - ($headerHeight + $footerHeight));
+  min-height: calc(100vh - ($headerHeight + $footerHeight));
+
+  @media screen and (max-width: 480px) {
+    min-height: calc(100vh - ($headerHeight * 2 + $footerHeight));
+  }
 }

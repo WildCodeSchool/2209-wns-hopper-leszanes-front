@@ -1,3 +1,5 @@
+import { Folders, Upload, Home, Contact, User } from "lucide-react";
+import { NavLink } from "react-router-dom";
 import styles from "./MobileNavbar.module.scss";
 
 export const MobileNavbar = () => {
@@ -5,34 +7,34 @@ export const MobileNavbar = () => {
     <nav className={styles.mobileNavbar}>
       <ul className={styles.navLinks}>
         <li>
-          <a href="#Fichiers">
-            <span>icon</span>
-            <span>Text</span>
-          </a>
+          <NavLink to="/">
+            <Home />
+            <span>Accueil</span>
+          </NavLink>
         </li>
         <li>
-          <a href="#Fichiers">
-            <span>icon</span>
-            <span>Text</span>
-          </a>
+          <NavLink to="/login">
+            <Folders />
+            <span>Fichiers</span>
+          </NavLink>
+        </li>
+        {/* https://reactrouter.com/en/main/components/nav-link */}
+        <li>
+          <NavLink to="/upload" className={styles.uploadButton}>
+            <Upload size={35} />
+          </NavLink>
         </li>
         <li>
-          <a href="#Fichiers" className={styles.uploadButton}>
-            <span>icon</span>
-            <span>Text</span>
-          </a>
+          <NavLink to="/contacts">
+            <Contact />
+            <span>Contacts</span>
+          </NavLink>
         </li>
         <li>
-          <a href="#Fichiers">
-            <span>icon</span>
-            <span>Text</span>
-          </a>
-        </li>
-        <li>
-          <a href="#Fichiers">
-            <span>icon</span>
-            <span>Text</span>
-          </a>
+          <NavLink to="/rpofile">
+            <User />
+            <span>Profile</span>
+          </NavLink>
         </li>
       </ul>
     </nav>
