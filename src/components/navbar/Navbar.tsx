@@ -7,25 +7,25 @@ export const Navbar = () => {
     <nav className={styles.navbar}>
       <ul className={styles.navLinks}>
         <li>
-          <NavLink to="/">
+          <NavLink to="/" data-testid="home">
             <Home size="30" />
             <span data-test-id="Accueil">Accueil</span>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/files">
+          <NavLink to="/files" data-testid="files">
             <Folders size="30" />
             <span data-test-id="Fichiers">Fichiers</span>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/upload">
+          <NavLink to="/upload" data-testid="upload">
             <Upload size="30" />
             <span data-test-id="Upload">Upload</span>
           </NavLink>
         </li>
         <li>
-          <NavLink to="/contacts" data-test-id="contacts">
+          <NavLink to="/contacts" data-testid="contacts">
             <Contact size="30" />
             <span>Contacts</span>
           </NavLink>
