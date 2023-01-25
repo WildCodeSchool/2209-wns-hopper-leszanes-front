@@ -31,7 +31,7 @@ export const MobileNavbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/rpofile">
+          <NavLink to="/profile">
             <User />
             <span>Profile</span>
           </NavLink>
