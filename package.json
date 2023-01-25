@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "tsc && vite build",
-    "preview": "vite preview --host",
+    "build": "tsc && vite build --no-watch",
+    "preview": "pnpm build && vite preview --host",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,scss,json} --config ./.prettierrc.yaml",
     "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}",
     "clean": "format && lint",
-    "coverage": "vitest run --coverage",
-    "test": "vitest",
-    "test:ui": "vitest --ui"
+    "coverage": "pnpm build && vitest run --coverage",
+    "test": "pnpm build && vitest",
+    "test:ui": "pnpm build && vitest --ui",
+    "test:ci": "pnpm build && vitest run"
   },
   "dependencies": {
     "@apollo/client": "3.x",
