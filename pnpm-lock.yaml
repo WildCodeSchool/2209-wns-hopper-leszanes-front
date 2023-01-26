@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@apollo/client': 3.x
-  '@playwright/test': ^1.29.0
+  '@playwright/test': ^1.29.1
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.4.0
   '@testing-library/user-event': ^14.4.3
@@ -22,7 +22,8 @@ specifiers:
   eslint-config-airbnb-typescript-prettier: ^5.0.0
   graphql: 15.x
   jsdom: ^20.0.3
-  playwright: ^1.29.0
+  lucide-react: 0.105.0-alpha.4
+  playwright: ^1.29.1
   prettier: ^2.8.1
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -40,12 +41,13 @@ dependencies:
   canvas-confetti: 1.6.0
   classnames-generics: 1.0.8
   graphql: 15.8.0
+  lucide-react: 0.105.0-alpha.4_react@18.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-router-dom: 6.5.0_biqbaboplfbrettd7655fr4n2y
 
 devDependencies:
-  '@playwright/test': 1.29.0
+  '@playwright/test': 1.29.1
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
   '@testing-library/user-event': 14.4.3_aaq3sbffpfe3jnxzm2zngsddei
@@ -61,7 +63,7 @@ devDependencies:
   eslint: 8.30.0
   eslint-config-airbnb-typescript-prettier: 5.0.0_ahtophbrd2laqvxoyg4c2wfe7i
   jsdom: 20.0.3
-  playwright: 1.29.0
+  playwright: 1.29.1
   prettier: 2.8.1
   sass: 1.57.1
   typescript: 4.9.4
@@ -690,13 +692,13 @@ packages:
       fastq: 1.14.0
     dev: true
 
-  /@playwright/test/1.29.0:
-    resolution: {integrity: sha512-gp5PVBenxTJsm2bATWDNc2CCnrL5OaA/MXQdJwwkGQtqTjmY+ZOqAdLqo49O9MLTDh2vYh+tHWDnmFsILnWaeA==}
+  /@playwright/test/1.29.1:
+    resolution: {integrity: sha512-iQxk2DX5U9wOGV3+/Jh9OHPsw5H3mleUL2S4BgQuwtlAfK3PnKvn38m4Rg9zIViGHVW24opSm99HQm/UFLEy6w==}
     engines: {node: '>=14'}
     hasBin: true
     dependencies:
       '@types/node': 18.11.17
-      playwright-core: 1.29.0
+      playwright-core: 1.29.1
     dev: true
 
   /@polka/url/1.0.0-next.21:
@@ -2989,6 +2991,14 @@ packages:
       yallist: 4.0.0
     dev: true
 
+  /lucide-react/0.105.0-alpha.4_react@18.2.0:
+    resolution: {integrity: sha512-QclWOzKYj7sDW33jTQK4enmxL1LmI2SHFqEEP56EWhvs4mmlbbFe6ALYcdcdGysNISNovEbH5WBHg8tN5DLn0w==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /lz-string/1.4.4:
     resolution: {integrity: sha512-0ckx7ZHRPqb0oUm8zNr+90mtf9DQB60H1wMCjBtfi62Kl3a7JbHob6gA2bC+xRvZoOL+1hzUK8jeuEIQE8svEQ==}
     hasBin: true
@@ -3320,19 +3330,19 @@ packages:
       pathe: 1.0.0
     dev: true
 
-  /playwright-core/1.29.0:
-    resolution: {integrity: sha512-pboOm1m0RD6z1GtwAbEH60PYRfF87vKdzOSRw2RyO0Y0a7utrMyWN2Au1ojGvQr4umuBMODkKTv607YIRypDSQ==}
+  /playwright-core/1.29.1:
+    resolution: {integrity: sha512-20Ai3d+lMkWpI9YZYlxk8gxatfgax5STW8GaMozAHwigLiyiKQrdkt7gaoT9UQR8FIVDg6qVXs9IoZUQrDjIIg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
 
-  /playwright/1.29.0:
-    resolution: {integrity: sha512-vtXgX3FPNcAJq1QoIVCvmiHHKOLVTZkSYEo60n+EnX5MrNznAJzGquxT8c2sv+BG3CDyLeKm351e491HnF7yjw==}
+  /playwright/1.29.1:
+    resolution: {integrity: sha512-lasC+pMqsQ2uWhNurt3YK3xo0gWlMjslYUylKbHcqF/NTjwp9KStRGO7S6wwz2f52GcSnop8XUK/GymJjdzrxw==}
     engines: {node: '>=14'}
     hasBin: true
     requiresBuild: true
     dependencies:
-      playwright-core: 1.29.0
+      playwright-core: 1.29.1
     dev: true
 
   /postcss-filter-plugins/3.0.1:

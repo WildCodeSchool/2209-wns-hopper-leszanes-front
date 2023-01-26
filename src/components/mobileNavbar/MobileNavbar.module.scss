@@ -1,0 +1,43 @@
+.mobileNavbar {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  color: black;
+  background-color: $mainColor;
+  height: $headerHeight;
+  display: flex;
+
+  .navLinks {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+  }
+  a {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    align-items: center;
+    gap: 7px;
+    color: black;
+    &:hover {
+      color: $linkHoverColor;
+    }
+  }
+}
+.uploadButton {
+  background-color: $accentuatedMainColor;
+  height: 50px;
+  width: 50px;
+  padding: 5px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+  /*
+  button => flex center > * column
+  */

@@ -1,0 +1,9 @@
+.footer {
+  background: $mainColor;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: $footerHeight;
+}

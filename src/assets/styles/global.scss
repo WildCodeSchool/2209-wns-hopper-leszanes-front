@@ -2,6 +2,7 @@
 v2.0 | 20110126
 License: none (public domain)
 */
+
 html,
 body,
 div,
@@ -105,7 +106,8 @@ section {
   display: block;
 }
 body {
-  line-height: 1;
+  line-height: 1.5;
+  background: $appBackground;
 }
 
 html {
@@ -130,8 +132,4 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-
-.row {
-  display: flex;
 }

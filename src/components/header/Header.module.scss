@@ -1,0 +1,45 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  background-color: $mainColor;
+  height: $headerHeight;
+  justify-content: space-between;
+  align-items: center;
+  padding-inline: 15px;
+}
+.logo {
+  height: 60px;
+  width: 60px;
+}
+
+.profileButton{
+  background-color: $accentuatedMainColor;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  padding: 5px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.responsiveHeader{
+  display: none;
+}
+@media all and (max-width: 480px) { 
+  .header{
+    display: none;
+  }
+  .responsiveHeader{
+    height: 75px;
+    width: 100%;
+    background-color: $mainColor;
+    display:flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+
+  }
+}

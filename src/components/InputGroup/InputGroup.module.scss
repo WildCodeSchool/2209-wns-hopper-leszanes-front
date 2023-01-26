@@ -1,0 +1,42 @@
+.inputGroup {
+  display: flex;
+  gap: 10px;
+  position: relative;
+  width: 100%;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 7px;
+  }
+
+  span {
+    color: rgb(100, 100, 100);
+  }
+  .inputFieldContainer {
+    display: flex;
+    align-items: center;
+
+    &:has(svg){
+      input{
+        padding-right: 32px;
+      }
+    }
+
+    input {
+      all: unset;
+      background: #fff;
+      border: 2px solid #ccc;
+      padding: 5px 15px;
+      border-radius: 12px;
+      color: $linkHoverColor;
+      width: 100%;
+
+      &:focus {
+        outline: 3px solid $accentuatedMainColor;
+        outline-offset: 1px;
+      }
+    }
+  }
+}
