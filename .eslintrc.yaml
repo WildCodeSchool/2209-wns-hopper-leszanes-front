@@ -11,8 +11,8 @@ parserOptions:
     ecmaFeatures:
         jsx: true
     ecmaVersion: 2022
-    project: './tsconfig.json'
     sourceType: module
+    project: ./tsconfig.json
 plugins:
     - '@typescript-eslint'
 root: true
@@ -49,3 +49,8 @@ rules:
     prettier/prettier:
         - error
         - endOfLine: auto
+    "@typescript-eslint/no-misused-promises":
+        - error
+        - checksVoidReturn: false
+    "@typescript-eslint/no-floating-promises":
+        - off

@@ -7,6 +7,7 @@ import { LoginView } from "./views/Login/LoginView";
 import { RegisterView } from "./views/Register/RegisterView";
 import { UserProfileView } from "./views/UserProfile/UserProfileView";
 import { HomeView } from "./views/Home/HomeView";
+import { AuthRouteGuard } from "./components/AuthRouteGuard/AuthRouteGuard";
 
 export const router = createBrowserRouter([
   {
@@ -21,9 +22,9 @@ export const router = createBrowserRouter([
       {
         path: "profile",
         element: (
-          // <AuthProvider>
-          <UserProfileView />
-          // </AuthProvider>
+          <AuthRouteGuard>
+            <UserProfileView />
+          </AuthRouteGuard>
         ),
       },
       {
