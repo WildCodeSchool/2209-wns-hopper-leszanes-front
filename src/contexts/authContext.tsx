@@ -30,10 +30,6 @@ const useProvideAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const { data, refetch, loading } = useQuery<GetCurrentUser>(getCurrentUser);
 
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
-
   const fetchCurentUser = useCallback(async () => {
     if (!data) {
       setUser(null);
