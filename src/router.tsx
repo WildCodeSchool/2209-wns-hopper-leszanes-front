@@ -8,6 +8,7 @@ import { RegisterView } from "./views/Register/RegisterView";
 import { UserProfileView } from "./views/UserProfile/UserProfileView";
 import { HomeView } from "./views/Home/HomeView";
 import { AuthRouteGuard } from "./components/AuthRouteGuard/AuthRouteGuard";
+import { ImportFile } from "./components/ImportFile/ImportFile";
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "upload",
-        element: <h1>Upload</h1>,
+        element: <ImportFile />,
       },
       {
         path: "files",
