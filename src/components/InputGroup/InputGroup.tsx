@@ -15,6 +15,7 @@ type InputGroupProps = {
   labelProps?: LabelProps;
   icon?: React.ReactNode;
   error?: string;
+  disabled?: boolean;
 };
 
 export const InputGroup = ({
@@ -26,6 +27,7 @@ export const InputGroup = ({
   labelProps,
   name,
   type,
+  disabled,
 }: InputGroupProps) => {
   return (
     <div className={styles.inputGroup}>
@@ -38,6 +40,7 @@ export const InputGroup = ({
             name={name}
             placeholder={placeholder}
             {...inputProps}
+            disabled={disabled}
           />
           {icon}
         </div>

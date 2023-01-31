@@ -13,33 +13,29 @@
   width: 60px;
 }
 
-.profileButton{
+.profileButton {
   background-color: $accentuatedMainColor;
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  padding: 5px;
-  
+  border-radius: 15px;
+  padding: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.responsiveHeader{
+.responsiveHeader {
   display: none;
 }
-@media all and (max-width: 480px) { 
-  .header{
+@media all and (max-width: 480px) {
+  .header {
     display: none;
   }
-  .responsiveHeader{
+  .responsiveHeader {
     height: 75px;
     width: 100%;
     background-color: $mainColor;
-    display:flex;
+    display: flex;
     align-items: center;
     justify-content: space-around;
     flex-wrap: wrap;
-
   }
 }
