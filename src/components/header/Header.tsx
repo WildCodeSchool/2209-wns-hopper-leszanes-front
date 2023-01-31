@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { LogIn } from "lucide-react";
 import zanelogo from "../../assets/images/zanelogo.png";
 import styles from "./Header.module.scss";
-import { Navbar } from "../navbar/Navbar";
-import { MobileNavbar } from "../mobileNavbar/MobileNavbar";
+import { Navbar } from "../Navbar/Navbar";
+import { MobileNavbar } from "../MobileNavbar/MobileNavbar";
 import { useAuth } from "../../contexts/authContext";
 import { UserMenu } from "../UserMenu/UserMenu";
 
@@ -18,7 +19,14 @@ export const Header = () => {
             <UserMenu />
           </NavLink>
         ) : (
-          <NavLink to="/login">Se connecter</NavLink>
+          <NavLink
+            className={styles.profileButton}
+            to="/login"
+            style={{ gap: "5px" }}
+          >
+            Se connecter
+            <LogIn />
+          </NavLink>
         )}
       </header>
       <header className={styles.responsiveHeader}>

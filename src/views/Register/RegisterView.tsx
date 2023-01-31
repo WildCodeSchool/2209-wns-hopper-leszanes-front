@@ -115,7 +115,12 @@ export const RegisterView = () => {
             Sign up
           </button>
         </form>
-        {showError && <p>Merci d'entrer des informations valides</p>}
+        {showError && (
+          <p>
+            Merci d'entrer des informations valides (Mot de passe 12 caractères,
+            [Aa3!])
+          </p>
+        )}
         {loading && <p>Chargement...</p>}
         {!loading && showError && <p>Mauvais email ou mauvais mot de passe</p>}
       </div>

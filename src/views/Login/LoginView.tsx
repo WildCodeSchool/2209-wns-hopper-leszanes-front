@@ -30,7 +30,8 @@ export const LoginView = () => {
 
   useEffect(() => {
     if (user) {
-      navigate(location.state?.from || "/", {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      navigate((location.state?.from as string) || "/", {
         replace: true,
       });
     }
@@ -64,7 +65,8 @@ export const LoginView = () => {
     const password = e.target.password.value;
     await doSignIn(email, password);
     if (user) {
-      navigate(location.state?.from || "/", {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      navigate((location.state?.from as string) || "/", {
         replace: true,
       });
     }
@@ -98,7 +100,7 @@ export const LoginView = () => {
             labelProps={{ className: styles.passwordLabel }}
           />
           <button disabled={loading} type="submit">
-            Sign up
+            Se connecter
           </button>
           <NavLink to="/register">S'enregistrer</NavLink>
         </form>
