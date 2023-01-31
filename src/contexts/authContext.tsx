@@ -14,7 +14,8 @@ import { getCurrentUser } from "../graphql/getCurrentUser";
 
 type AuthContextData = {
   user: User | null | undefined;
-  setUser: (user: User) => void;
+  setUser: (user: User | null | undefined) => void;
+  loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -26,19 +27,22 @@ type GetCurrentUser = {
 };
 
 const useProvideAuth = () => {
-  console.log("useProvideAuth");
-  const [user, setUser] = useState<User | null | undefined>(undefined);
-  const { data, refetch } = useQuery<GetCurrentUser>(getCurrentUser);
+  const [user, setUser] = useState<User | null>(null);
+  const { data, refetch, loading } = useQuery<GetCurrentUser>(getCurrentUser);
+
+  useEffect(() => {
+    console.log(loading);
+  }, [loading]);
 
   const fetchCurentUser = useCallback(async () => {
-    console.log("fetchCurentUser");
     if (!data) {
+      setUser(null);
       return;
     }
-    console.log(data);
-    if (data.getCurrentUser.user) {
+    if (data.getCurrentUser) {
+      setUser(null);
       await refetch();
-      setUser(data.getCurrentUser.user);
+      setUser(data.getCurrentUser);
     } else {
       setUser(null);
     }
@@ -51,6 +55,7 @@ const useProvideAuth = () => {
   return {
     user,
     setUser,
+    loading,
   };
 };
 
@@ -65,8 +70,6 @@ const AuthProviderComponent = ({ children }: PropsWithChildren) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
-  console.log("useAuth");
 
   if (context === ({} as AuthContextData)) {
     throw new Error("useAuth must be used within an AuthProvider");

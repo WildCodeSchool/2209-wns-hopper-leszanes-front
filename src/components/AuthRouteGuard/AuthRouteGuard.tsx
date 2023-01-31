@@ -1,11 +1,12 @@
 import { PropsWithChildren, useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
+import { LoadingLayout } from "../LoadingLayout/LoadingLayout";
 
 export const AuthRouteGuard = ({ children }: PropsWithChildren) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (user === undefined) return;
@@ -14,32 +15,19 @@ export const AuthRouteGuard = ({ children }: PropsWithChildren) => {
     }
   }, [user, location.pathname, navigate]);
 
-  if (user === null) {
-    return (
-      <Navigate
-        to="/login"
-        replace
-        state={{
-          from: location,
-        }}
-      />
-    );
-  }
-
   const renderChildren = () => {
-    if (user === undefined) {
-      return <p>Loading</p>;
+    if (loading) {
+      console.log("loading");
+      return <LoadingLayout />;
     }
     if (user === null) {
-      return <Navigate to="/login" replace state={{ from: location }} />;
+      return (
+        <Navigate to="/login" replace state={{ from: location.pathname }} />
+      );
     }
 
     return children;
   };
-
-  if (location.pathname === "/login" && user !== null) {
-    return <Navigate to="/" replace />;
-  }
 
   return <>{renderChildren()}</>;
 };

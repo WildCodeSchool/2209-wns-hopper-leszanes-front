@@ -1,6 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@apollo/client";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { InputGroup } from "../../components/InputGroup/InputGroup";
 import styles from "./LoginView.module.scss";
 import { signIn } from "../../graphql/singIn";
@@ -19,11 +20,21 @@ type LoginResponse = {
 };
 
 export const LoginView = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user, setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [wrongCredentials, setWrongCredential] = useState(false);
   const icon = showPassword ? <EyeOff /> : <Eye />;
   const [doSigninMutation, { loading }] = useMutation<LoginResponse>(signIn);
+
+  useEffect(() => {
+    if (user) {
+      navigate(location.state?.from || "/", {
+        replace: true,
+      });
+    }
+  }, [location, navigate, user]);
 
   const doSignIn = async (email: string, password: string) => {
     try {
@@ -52,6 +63,11 @@ export const LoginView = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     await doSignIn(email, password);
+    if (user) {
+      navigate(location.state?.from || "/", {
+        replace: true,
+      });
+    }
   };
   return (
     <div className={styles.loginContainer}>
@@ -84,8 +100,8 @@ export const LoginView = () => {
           <button disabled={loading} type="submit">
             Sign up
           </button>
+          <NavLink to="/register">S'enregistrer</NavLink>
         </form>
-        {!loading && user && <p>Vous êtes connecté avec {user.email}</p>}
         {loading && <p>Chargement...</p>}
         {!loading && wrongCredentials && (
           <p>Mauvais email ou mauvais mot de passe</p>

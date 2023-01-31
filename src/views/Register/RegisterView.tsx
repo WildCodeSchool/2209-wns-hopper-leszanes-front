@@ -1,6 +1,7 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@apollo/client";
+import { useLocation, useNavigate } from "react-router-dom";
 import { InputGroup } from "../../components/InputGroup/InputGroup";
 import styles from "./RegisterView.module.scss";
 import { createUser } from "../../graphql/createUser";
@@ -20,12 +21,22 @@ type RegisterResponse = {
 };
 
 export const RegisterView = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user, setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showError, setShowError] = useState(false);
   const icon = showPassword ? <EyeOff /> : <Eye />;
   const [doSignupMutation, { loading }] =
     useMutation<RegisterResponse>(createUser);
+
+  useEffect(() => {
+    if (user) {
+      navigate("/", {
+        replace: true,
+      });
+    }
+  }, [location, navigate, user]);
 
   const doSignUp = async (name: string, email: string, password: string) => {
     try {
@@ -58,6 +69,11 @@ export const RegisterView = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     await doSignUp(name, email, password);
+    if (user) {
+      navigate("/", {
+        replace: true,
+      });
+    }
   };
 
   return (
@@ -100,7 +116,6 @@ export const RegisterView = () => {
           </button>
         </form>
         {showError && <p>Merci d'entrer des informations valides</p>}
-        {!loading && user && <p>Vous êtes connecté avec {user.email}</p>}
         {loading && <p>Chargement...</p>}
         {!loading && showError && <p>Mauvais email ou mauvais mot de passe</p>}
       </div>
