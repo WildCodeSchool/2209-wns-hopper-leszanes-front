@@ -36,7 +36,7 @@ rules:
         - error
         - allowNamedFunctions: false
     no-mixed-spaces-and-tabs: warn
-    camelcase: error
+    camelcase: off
     '@typescript-eslint/consistent-type-definitions':
         - error
         - type

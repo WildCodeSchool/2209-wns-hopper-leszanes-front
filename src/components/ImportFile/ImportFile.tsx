@@ -1,94 +1,153 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import axios from "axios";
+import { useMutation } from "@apollo/client";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
+import { createFile } from "../../graphql/createFile";
+
+type UploadFormEvent = FormEvent<HTMLFormElement> & {
+  target: HTMLInputElement & {
+    fileName: HTMLInputElement;
+    description: HTMLInputElement;
+    isPrivate: HTMLInputElement;
+  };
+};
+
+type UploadResponse = {
+  createFile: { name: string; description: string; is_private: boolean };
+};
 
 export const ImportFile = () => {
-  const [isLink, setIsLink] = useState(false);
   const [file, setFile] = useState<File>();
+  const [fileName, setFileName] = useState<string>("");
+  const [fileType, setFileType] = useState<string>("");
+  const [uploadDescription, setUploadDescription] = useState<string>(
+    "A great description"
+  );
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [doCreateFileMutation, { loading }] =
+    useMutation<UploadResponse>(createFile);
+
+  useEffect(() => {
+    console.log("Use Effect");
+    const strTitle = file?.name.split(".");
+    if (strTitle) {
+      setFileName(strTitle[0]);
+      setFileType(strTitle[1]);
+    }
+  }, [file]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
     }
   };
-  const handleUploadClick = () => {
+  const doCreateFile = async (
+    name: string,
+    description: string,
+    type: string,
+    is_private: boolean
+  ) => {
+    try {
+      await doCreateFileMutation({
+        variables: {
+          data: {
+            name,
+            description,
+            type,
+            is_private,
+          },
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleUploadSubmit = (e: UploadFormEvent) => {
+    e.preventDefault();
     if (!file) {
       return;
     }
-    console.log(file);
-
-    // // 👇 Uploading the file using the fetch API to the server
-    // fetch("https://httpbin.org/post", {
-    //   method: "POST",
-    //   body: file,
-    //   // 👇 Set headers manually for single file upload
-    //   headers: {
-    //     "content-type": file.type,
-    //     "content-length": `${file.size}`, // 👈 Headers need to be a string
-    //   },
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => console.log(data))
-    //   .catch((err) => console.error(err));
+    if (e.target.fileName.value) {
+      console.log(fileName);
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    axios
+      .post("http://localhost:4000/files/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (fileName && uploadDescription && fileType) {
+          doCreateFile(fileName, uploadDescription, fileType, isPrivate);
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
     <div className={styles.sendFileContainer}>
       <div>
         <h1>Importer un fichier</h1>
-        <input type="file" onChange={handleFileChange} />
-        <form>
+        <label htmlFor="inputTag">
+          Upload file
+          <input
+            id="inputTag"
+            type="file"
+            onChange={handleFileChange}
+            multiple
+          />
+        </label>
+
+        {/* <ul>
+          {files.map((file, i) => (
+            <li key={i}>{file.name}</li>
+          ))}
+        </ul> */}
+        <form onSubmit={handleUploadSubmit}>
           <InputGroup
-            label="Fichier"
-            name="file"
+            label="Nom du fichier"
+            name="fileName"
             type="text"
             placeholder="Mon fichier"
-            // disabled={loading}
+            disabled={loading}
+            value={fileName}
+            onChange={(e) => setFileName(e.target.value)}
           />
           <InputGroup
-            label="Titre"
-            name="depot"
+            label="Description"
+            name="description"
             type="text"
-            placeholder="Mon super dépôt"
-            // disabled={loading}
-          />
-          <InputGroup
-            label="Mail expéditeur"
-            name="mailfrom"
-            type="text"
-            placeholder="myemail@email.com"
-            // disabled={loading}
+            placeholder="Description"
+            disabled={loading}
+            value={uploadDescription}
+            onChange={(e) => setUploadDescription(e.target.value)}
           />
           <InputGroup
             label="Mail destinataire"
             name="mailto"
             type="text"
             placeholder="myemail@email.com"
-            // disabled={loading}
+            disabled={loading}
           />
           <button
-            // disabled={loading}
+            disabled={loading}
             type="button"
             onClick={() => {
-              setIsLink(!isLink);
+              setIsPrivate(!isPrivate);
             }}
           >
-            {isLink ? "Obtenir le lien" : "Envoyer par email"}
+            {isPrivate ? "Obtenir le lien" : "Envoyer par email"}
           </button>
-          <button
-            // disabled={loading}
-            type="submit"
-          >
-            {isLink ? "Envoyer" : "Obtenir le lien"}
-          </button>
-          <button type="button" onClick={handleUploadClick}>
-            Upload
+          <button disabled={loading} type="submit">
+            {isPrivate ? "Envoyer" : "Obtenir le lien"}
           </button>
         </form>
-        {/* {loading && <p>Chargement...</p>}
-        {!loading && wrongCredentials && (
-          <p>Mauvais email ou mauvais mot de passe</p>
-        )} */}
+        {loading && <p>Chargement...</p>}
       </div>
     </div>
   );

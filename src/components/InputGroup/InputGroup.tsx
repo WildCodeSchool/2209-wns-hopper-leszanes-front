@@ -1,8 +1,9 @@
+import { ChangeEventHandler } from "react";
 import styles from "./InputGroup.module.scss";
 
 type InputProps = Omit<
   React.InputHTMLAttributes<HTMLInputElement>,
-  "label" | "type" | "name" | "placeholder"
+  "label" | "type" | "name" | "placeholder" | "value" | "onChange"
 >;
 type LabelProps = Omit<React.LabelHTMLAttributes<HTMLLabelElement>, "htmlFor">;
 
@@ -16,6 +17,8 @@ type InputGroupProps = {
   icon?: React.ReactNode;
   error?: string;
   disabled?: boolean;
+  value?: string | number;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
 };
 
 export const InputGroup = ({
@@ -28,6 +31,8 @@ export const InputGroup = ({
   name,
   type,
   disabled,
+  value,
+  onChange,
 }: InputGroupProps) => {
   return (
     <div className={styles.inputGroup}>
@@ -41,6 +46,8 @@ export const InputGroup = ({
             placeholder={placeholder}
             {...inputProps}
             disabled={disabled}
+            value={value}
+            onChange={onChange}
           />
           {icon}
         </div>
