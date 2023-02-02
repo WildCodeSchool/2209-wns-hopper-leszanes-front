@@ -9,6 +9,12 @@
     flex-direction: column;
     width: 100%;
     gap: 7px;
+
+    &:has(input[type="checkbox"]){
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      width: fit-content;
+    }
   }
 
   span {
@@ -19,15 +25,15 @@
     align-items: center;
 
     &:has(svg){
-      input{
+      input, textarea{
         padding-right: 32px;
       }
     }
 
-    input {
+    input, textarea {
       all: unset;
       background: #fff;
-      border: 2px solid #ccc;
+      border: 2px solid hsl(0, 1%, 61%);
       padding: 5px 15px;
       border-radius: 12px;
       color: $linkHoverColor;
@@ -37,6 +43,29 @@
         outline: 3px solid $accentuatedMainColor;
         outline-offset: 1px;
       }
+
+    }
+    input[type="checkbox"] {
+      width: 15px;
+      height: 15px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid hsl(0, 1%, 61%);
+      padding: 0;
+      border-radius: 5px;
+    }
+    input[type="checkbox"]:checked {
+      content: url("src/assets/icons/check.svg");
+    }
+
+    input[type="file"]{
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+      all: unset;
     }
   }
 }

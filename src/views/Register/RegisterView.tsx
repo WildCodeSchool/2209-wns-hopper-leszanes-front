@@ -85,6 +85,7 @@ export const RegisterView = () => {
             label="Nom"
             name="name"
             type="text"
+            inputMode="text"
             placeholder="Gérard"
             disabled={loading}
           />
@@ -92,6 +93,7 @@ export const RegisterView = () => {
             label="Email"
             name="email"
             type="text"
+            inputMode="email"
             placeholder="myemail@email.com"
             disabled={loading}
           />
@@ -99,6 +101,7 @@ export const RegisterView = () => {
             label="Mot de passe"
             name="password"
             type={showPassword ? "text" : "password"}
+            inputMode="text"
             placeholder="My@Password123"
             icon={
               <button

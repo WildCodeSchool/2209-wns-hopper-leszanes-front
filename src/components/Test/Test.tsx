@@ -4,8 +4,9 @@ import {
   LabelHTMLAttributes,
   HTMLInputTypeAttribute,
   HTMLAttributes,
+  ReactNode,
 } from "react";
-import styles from "./InputGroup.module.scss";
+import styles from "../InputGroup/InputGroup.module.scss";
 
 type InputProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -23,29 +24,72 @@ type LabelProps = Omit<LabelHTMLAttributes<HTMLLabelElement>, "htmlFor">;
 
 type Tag = Pick<JSX.IntrinsicElements, "input" | "textarea" | "select">;
 
-type InputGroupProps = {
+// type InputGroupProps = {
+//   label: string;
+//   type: HTMLInputTypeAttribute;
+//   name: string;
+//   placeholder: string;
+//   inputProps?: InputProps;
+//   labelProps?: LabelProps;
+//   icon?: React.ReactNode;
+//   error?: string;
+//   disabled?: boolean;
+//   value?: string | number;
+//   onChange?:
+//     | ChangeEventHandler<HTMLInputElement>
+//     | ChangeEventHandler<HTMLTextAreaElement>
+//     | ChangeEventHandler<HTMLSelectElement>;
+//   checked?: boolean;
+//   as?: keyof Tag;
+//   inputMode: HTMLAttributes<HTMLInputElement>["inputMode"];
+//   autoComplete?: string;
+//   multiple?: boolean;
+// };
+
+type InputGroupDefaultProps = {
   label: string;
-  type: HTMLInputTypeAttribute;
   name: string;
-  placeholder: string;
   inputProps?: InputProps;
   labelProps?: LabelProps;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   error?: string;
   disabled?: boolean;
   value?: string | number;
-  onChange?:
-    | ChangeEventHandler<HTMLInputElement>
-    | ChangeEventHandler<HTMLTextAreaElement>
-    | ChangeEventHandler<HTMLSelectElement>;
+  onChange?: ChangeEventHandler;
+  as: keyof Tag;
+};
+
+type InputGroupCheckboxProps = {
+  type: "checkbox";
   checked?: boolean;
-  as?: keyof Tag;
-  inputMode: HTMLAttributes<HTMLInputElement>["inputMode"];
-  autoComplete?: string;
+};
+
+type InputGroupFileProps = {
+  type: "file";
   multiple?: boolean;
 };
 
-export const InputGroup = ({
+type InputGroupSelectProps = {
+  type: "select";
+  children: ReactNode;
+};
+
+type InputGroupTextProps = {
+  type: "textarea";
+  inputMode: HTMLAttributes<HTMLTextAreaElement>["inputMode"];
+  autoComplete?: string;
+  placeholder: string;
+};
+
+type ConditionalProps =
+  | InputGroupCheckboxProps
+  | InputGroupFileProps
+  | InputGroupSelectProps
+  | InputGroupTextProps;
+
+type InputGroupProps = InputGroupDefaultProps & ConditionalProps;
+
+export const InputGroup2 = ({
   label,
   placeholder,
   icon,
@@ -77,7 +121,7 @@ export const InputGroup = ({
             id={name}
             type={type}
             name={name}
-            placeholder={type !== "checkbox" ? placeholder : undefined}
+            placeholder={placeholder ?? undefined}
             {...inputProps}
             disabled={disabled}
             value={type !== "checkbox" ? value : undefined}

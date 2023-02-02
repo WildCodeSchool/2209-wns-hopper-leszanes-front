@@ -80,6 +80,7 @@ export const LoginView = () => {
             label="Email"
             name="email"
             type="text"
+            inputMode="email"
             placeholder="myemail@email.com"
             disabled={loading}
           />
@@ -88,6 +89,7 @@ export const LoginView = () => {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="MyPassword123"
+            inputMode="text"
             disabled={loading}
             icon={
               <button
