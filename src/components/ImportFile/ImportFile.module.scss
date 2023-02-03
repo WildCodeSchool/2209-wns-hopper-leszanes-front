@@ -28,6 +28,11 @@ main:has(.sendFileContainer) {
       flex-direction: column;
       gap: 20px;
     }
-
+    input {
+      display: none;
+    }
+    label {
+      cursor: pointer;
+    }
   }
 }
