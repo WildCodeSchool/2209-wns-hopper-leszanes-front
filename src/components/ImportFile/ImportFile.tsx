@@ -103,8 +103,6 @@ export const ImportFile = () => {
           name="inputTag"
           onChange={handleFileChange}
           type="file"
-          inputMode="text"
-          placeholder="Upload file"
           disabled={loading}
           multiple
         />

@@ -10,10 +10,11 @@
     width: 100%;
     gap: 7px;
 
-    &:has(input[type="checkbox"]){
+    &:has(input[type="checkbox"]) {
       flex-direction: row-reverse;
       justify-content: flex-end;
       width: fit-content;
+      align-items: center;
     }
   }
 
@@ -24,13 +25,20 @@
     display: flex;
     align-items: center;
 
-    &:has(svg){
-      input, textarea{
+    &:has(svg) {
+      input,
+      textarea {
         padding-right: 32px;
       }
     }
 
-    input, textarea {
+    &:has(input[type="checkbox"]) {
+      width: fit-content;
+      height: fit-content;
+    }
+
+    input,
+    textarea {
       all: unset;
       background: #fff;
       border: 2px solid hsl(0, 1%, 61%);
@@ -43,7 +51,6 @@
         outline: 3px solid $accentuatedMainColor;
         outline-offset: 1px;
       }
-
     }
     input[type="checkbox"] {
       width: 15px;
@@ -59,13 +66,17 @@
       content: url("src/assets/icons/check.svg");
     }
 
-    input[type="file"]{
+    input[type="file"] {
       display: flex;
       flex-direction: column;
     }
 
     input[type="file"]::-webkit-file-upload-button {
       all: unset;
+    }
+
+    textarea {
+      resize: vertical;
     }
   }
 }
