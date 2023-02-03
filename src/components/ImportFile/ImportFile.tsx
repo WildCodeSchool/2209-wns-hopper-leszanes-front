@@ -5,6 +5,7 @@ import { InputGroup } from "../InputGroup/InputGroup";
 import { InputGroup2 } from "../Test/Test";
 import styles from "./ImportFile.module.scss";
 import { createFile } from "../../graphql/createFile";
+import { useAuth } from "../../contexts/authContext";
 
 type UploadFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -15,13 +16,20 @@ type UploadFormEvent = FormEvent<HTMLFormElement> & {
 };
 
 type UploadResponse = {
-  createFile: { name: string; description: string; is_private: boolean };
+  createFile: {
+    name: string;
+    fileName: string;
+    description: string;
+    is_private: boolean;
+  };
 };
 
 export const ImportFile = () => {
   const [fileList, setFileList] = useState<FileList>();
-  const [fileName, setFileName] = useState<string>("");
+  const [userFileName, setUserFileName] = useState<string>("");
   const [fileType, setFileType] = useState<string>("");
+  const [fileSize, setFileSize] = useState<number>(0);
+  const { user } = useAuth();
   const files = fileList ? [...fileList] : [];
   const [uploadDescription, setUploadDescription] = useState<string>("");
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
@@ -32,15 +40,15 @@ export const ImportFile = () => {
     if (fileList) {
       if (fileList.length <= 1) {
         const strTitle = fileList[0].name.split(".");
-        setFileName(strTitle[0]);
+        setUserFileName(strTitle[0]);
         setFileType(strTitle[1]);
+        setFileSize(fileList[0].size);
       } else {
-        let filesNames = "Contient les fichiers suivants:";
+        let descriptionFilesNames = "Contient les fichiers suivants:";
         Array.from(fileList).forEach((file) => {
-          filesNames += `\n-${file.name}`;
+          descriptionFilesNames += `\n-${file.name}`;
         });
-        console.log(filesNames);
-        setUploadDescription(filesNames);
+        setUploadDescription(descriptionFilesNames);
       }
     }
   }, [fileList]);
@@ -52,18 +60,24 @@ export const ImportFile = () => {
   };
   const doCreateFile = async (
     name: string,
+    fileName: string,
     description: string,
     type: string,
-    is_private: boolean
+    is_private: boolean,
+    size: number,
+    created_by: number
   ) => {
     try {
       await doCreateFileMutation({
         variables: {
           data: {
             name,
+            fileName,
             description,
             type,
             is_private,
+            size,
+            created_by,
           },
         },
       });
@@ -86,8 +100,19 @@ export const ImportFile = () => {
       .post("http://localhost:4000/files/upload", formData)
       .then((res) => {
         console.log(res.data);
-        if (fileName && uploadDescription && fileType) {
-          doCreateFile(fileName, uploadDescription, fileType, isPrivate);
+        if (res.data) {
+          const name = "test";
+          if (user && userFileName && uploadDescription && fileType) {
+            doCreateFile(
+              name,
+              userFileName,
+              uploadDescription,
+              fileType,
+              isPrivate,
+              fileSize,
+              Number(user.id)
+            );
+          }
         }
       })
       .catch((err) => console.error(err));
@@ -115,8 +140,8 @@ export const ImportFile = () => {
             placeholder="Mon fichier"
             inputMode="text"
             disabled={loading}
-            value={fileName}
-            onChange={(e) => setFileName(e.target.value)}
+            value={userFileName}
+            onChange={(e) => setUserFileName(e.target.value)}
           />
           <InputGroup
             as="textarea"
