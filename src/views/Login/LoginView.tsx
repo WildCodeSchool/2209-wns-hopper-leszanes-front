@@ -7,6 +7,7 @@ import styles from "./LoginView.module.scss";
 import { signIn } from "../../graphql/singIn";
 import { UserWithToken } from "../../types/UserWithToken";
 import { useAuth } from "../../contexts/authContext";
+import { LoadingLayout } from "../../components/LoadingLayout/LoadingLayout";
 
 type SignInFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -22,7 +23,7 @@ type LoginResponse = {
 export const LoginView = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, setUser } = useAuth();
+  const { user, setUser, loading: authLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [wrongCredentials, setWrongCredential] = useState(false);
   const icon = showPassword ? <EyeOff /> : <Eye />;
@@ -71,6 +72,11 @@ export const LoginView = () => {
       });
     }
   };
+
+  if (authLoading) {
+    return <LoadingLayout />;
+  }
+
   return (
     <div className={styles.loginContainer}>
       <div>

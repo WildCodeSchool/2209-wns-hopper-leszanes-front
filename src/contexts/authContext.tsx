@@ -28,7 +28,7 @@ const useProvideAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const { data, loading } = useQuery<GetCurrentUser>(getCurrentUser);
 
-  const fetchCurentUser = useCallback(async () => {
+  const fetchCurentUser = useCallback(() => {
     if (!data) {
       return;
     }
@@ -50,7 +50,10 @@ const useProvideAuth = () => {
 
 const AuthProviderComponent = ({ children }: PropsWithChildren) => {
   const { user, setUser, loading } = useProvideAuth();
-  const value = useMemo(() => ({ user, setUser, loading }), [user, setUser]);
+  const value = useMemo(
+    () => ({ user, setUser, loading }),
+    [user, setUser, loading]
+  );
 
   return (
     <AuthContext.Provider value={value}> {children} </AuthContext.Provider>
