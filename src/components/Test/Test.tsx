@@ -167,7 +167,7 @@
 //     </div>
 //   );
 // };
-
+// @ts-ignore
 export const InputGroup2 = <C,>({
   as,
   children,
@@ -176,6 +176,6 @@ export const InputGroup2 = <C,>({
   children: React.ReactNode;
 }) => {
   const Component = as || "span";
-
+  // @ts-ignore
   return <Component>{children}</Component>;
 };

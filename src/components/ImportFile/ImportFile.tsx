@@ -2,7 +2,6 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { InputGroup } from "../InputGroup/InputGroup";
-import { InputGroup2 } from "../Test/Test";
 import styles from "./ImportFile.module.scss";
 import { createFile } from "../../graphql/createFile";
 import { useAuth } from "../../contexts/authContext";
@@ -82,7 +81,7 @@ export const ImportFile = () => {
         },
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -95,11 +94,9 @@ export const ImportFile = () => {
     files.forEach((file) => {
       formData.append(`files`, file, file.name);
     });
-    console.log(formData);
     axios
       .post("http://localhost:4000/files/upload", formData)
       .then((res) => {
-        console.log(res.data);
         if (res.data) {
           const name = "test";
           if (user && userFileName && uploadDescription && fileType) {
@@ -124,12 +121,16 @@ export const ImportFile = () => {
         <h1>Importer un fichier</h1>
 
         <InputGroup
-          label="Upload file"
+          label="Charger un fichier"
           name="inputTag"
-          onChange={handleFileChange}
+          onChange={(e) => {
+            handleFileChange(e as ChangeEvent<HTMLInputElement>);
+          }}
           type="file"
           disabled={loading}
           multiple
+          placeholder=""
+          inputMode="none"
         />
 
         <form onSubmit={handleUploadSubmit}>
@@ -141,7 +142,11 @@ export const ImportFile = () => {
             inputMode="text"
             disabled={loading}
             value={userFileName}
-            onChange={(e) => setUserFileName(e.target.value)}
+            onChange={(e) => {
+              setUserFileName(
+                (e as ChangeEvent<HTMLInputElement>).target.value
+              );
+            }}
           />
           <InputGroup
             as="textarea"
@@ -152,11 +157,17 @@ export const ImportFile = () => {
             inputMode="text"
             disabled={loading}
             value={uploadDescription}
-            onChange={(e) => setUploadDescription(e.target.value)}
+            onChange={(e) =>
+              setUploadDescription(
+                (e as ChangeEvent<HTMLTextAreaElement>).target.value
+              )
+            }
           />
-          <InputGroup2
+          <InputGroup
             as="input"
             type="checkbox"
+            placeholder=""
+            inputMode="none"
             checked={isPrivate}
             onChange={() => setIsPrivate((prev) => !prev)}
             label="Envoyer par email"

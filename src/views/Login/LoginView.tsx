@@ -88,7 +88,7 @@ export const LoginView = () => {
             label="Mot de passe"
             name="password"
             type={showPassword ? "text" : "password"}
-            placeholder="MyPassword123"
+            placeholder="My@Password123"
             inputMode="text"
             disabled={loading}
             icon={

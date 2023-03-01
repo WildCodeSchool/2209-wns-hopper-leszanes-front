@@ -9,7 +9,7 @@
     "preview": "pnpm build && vite preview --host",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,scss,json} --config ./.prettierrc.yaml",
     "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}",
-    "clean": "format && lint",
+    "clean": "pnpm format && pnpm lint",
     "coverage": "pnpm build && vitest run --coverage",
     "test": "pnpm build && vitest",
     "test:ui": "pnpm build && vitest --ui",

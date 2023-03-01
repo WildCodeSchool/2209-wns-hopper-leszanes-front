@@ -9,7 +9,7 @@ export const AuthRouteGuard = ({ children }: PropsWithChildren) => {
   const { user, loading } = useAuth();
 
   useEffect(() => {
-    if (user === undefined) return;
+    if (loading) return;
     if (user === null) {
       navigate("/login", { replace: true, state: { from: location.pathname } });
     }
@@ -17,7 +17,6 @@ export const AuthRouteGuard = ({ children }: PropsWithChildren) => {
 
   const renderChildren = () => {
     if (loading) {
-      console.log("loading");
       return <LoadingLayout />;
     }
     if (user === null) {
