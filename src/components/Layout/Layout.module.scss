@@ -1,0 +1,14 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout .main {
+  background: $appBackground;
+  min-height: calc(100vh - ($headerHeight + $footerHeight));
+
+  @media screen and (max-width: 480px) {
+    min-height: calc(100vh - ($headerHeight * 2 + $footerHeight));
+  }
+}

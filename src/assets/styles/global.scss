@@ -2,6 +2,30 @@
 v2.0 | 20110126
 License: none (public domain)
 */
+
+*:not(svg, svg *),
+*::before,
+*::after {
+  all: unset;
+  box-sizing: border-box;
+}
+
+script,
+style,
+title {
+  display: none;
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+button,
+p {
+  display: block;
+}
+
 html,
 body,
 div,
@@ -105,12 +129,18 @@ section {
   display: block;
 }
 body {
-  line-height: 1;
+  line-height: 1.5;
+  background: $appBackground;
+  display: flex;
+  flex-direction: column;
+  font-family: "Fantasy", "Comic Sans", cursive;
+  font-size: 1em;
 }
 
 html {
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
+  font-size: 100%;
 }
 
 ol,
@@ -130,8 +160,4 @@ q:after {
 table {
   border-collapse: collapse;
   border-spacing: 0;
-}
-
-.row {
-  display: flex;
 }

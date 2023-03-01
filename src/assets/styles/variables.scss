@@ -1,3 +1,11 @@
-$primary: violet;
-$secondary: rgba(0, 0, 0, 0.5);
-$tertiary: "content";
+/*Colors*/
+
+$appBackground: hsl(0, 0%, 95%);
+$mainColor: hsl(187, 58%, 81%);
+$accentuatedMainColor: hsl(187, 83%, 47%);
+$linkHoverColor: hsl(0, 0%, 28%);
+
+/*Sizes*/
+
+$footerHeight: 75px;
+$headerHeight: $footerHeight;

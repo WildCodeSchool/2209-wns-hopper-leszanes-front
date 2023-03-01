@@ -1,0 +1,24 @@
+.navbar {
+  // width: 100%;
+  color: black;
+  display: flex;
+
+  .navLinks {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    column-gap: 1rem;
+  }
+  a {
+    display: flex;
+    text-decoration: none;
+    align-items: center;
+    gap: 7px;
+    color: black;
+    &:hover {
+      color: $linkHoverColor;
+    }
+  }
+}
