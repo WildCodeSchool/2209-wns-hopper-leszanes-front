@@ -1,9 +1,9 @@
 import {
-  ChangeEventHandler,
   InputHTMLAttributes,
   LabelHTMLAttributes,
   HTMLInputTypeAttribute,
   HTMLAttributes,
+  ChangeEvent,
 } from "react";
 import styles from "./InputGroup.module.scss";
 
@@ -34,10 +34,12 @@ type InputGroupProps = {
   error?: string;
   disabled?: boolean;
   value?: string | number;
-  onChange?:
-    | ChangeEventHandler<HTMLInputElement>
-    | ChangeEventHandler<HTMLTextAreaElement>
-    | ChangeEventHandler<HTMLSelectElement>;
+  onChange?: (
+    e:
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLTextAreaElement>
+      | ChangeEvent<HTMLSelectElement>
+  ) => void;
   checked?: boolean;
   as?: keyof Tag;
   inputMode: HTMLAttributes<HTMLInputElement>["inputMode"];
@@ -69,6 +71,7 @@ export const InputGroup = ({
       <label htmlFor={name} {...labelProps}>
         <span>{label}</span>
         <div className={styles.inputFieldContainer}>
+          {/* @ts-expect-error */}
           <Tag
             autoComplete={autoComplete}
             inputMode={

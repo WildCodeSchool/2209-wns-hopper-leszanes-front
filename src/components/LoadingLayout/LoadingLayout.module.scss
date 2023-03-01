@@ -1,4 +1,4 @@
-@keyframes loader{
+@keyframes loader {
   from {
     transform: rotate(0deg);
   }
@@ -7,11 +7,11 @@
   }
 }
 
-.loader{
+.loader {
   animation: loader 1s linear infinite;
 }
 
-.loaderLayout{
+.loaderLayout {
   position: fixed;
   inset: 0;
   background: #fff;

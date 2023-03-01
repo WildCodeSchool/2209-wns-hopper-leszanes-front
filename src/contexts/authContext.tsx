@@ -13,36 +13,29 @@ import type { User } from "../types/User";
 import { getCurrentUser } from "../graphql/getCurrentUser";
 
 type AuthContextData = {
-  user: User | null | undefined;
-  setUser: (user: User | null | undefined) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
   loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 type GetCurrentUser = {
-  getCurrentUser: {
-    user: User | null;
-  };
+  getCurrentUser: User | null;
 };
 
 const useProvideAuth = () => {
   const [user, setUser] = useState<User | null>(null);
-  const { data, refetch, loading } = useQuery<GetCurrentUser>(getCurrentUser);
+  const { data, loading } = useQuery<GetCurrentUser>(getCurrentUser);
 
-  const fetchCurentUser = useCallback(async () => {
+  const fetchCurentUser = useCallback(() => {
     if (!data) {
-      setUser(null);
       return;
     }
     if (data.getCurrentUser) {
-      setUser(null);
-      await refetch();
       setUser(data.getCurrentUser);
-    } else {
-      setUser(null);
     }
-  }, [data, refetch]);
+  }, [data]);
 
   useEffect(() => {
     fetchCurentUser();
@@ -56,8 +49,11 @@ const useProvideAuth = () => {
 };
 
 const AuthProviderComponent = ({ children }: PropsWithChildren) => {
-  const { user, setUser } = useProvideAuth();
-  const value = useMemo(() => ({ user, setUser }), [user, setUser]);
+  const { user, setUser, loading } = useProvideAuth();
+  const value = useMemo(
+    () => ({ user, setUser, loading }),
+    [user, setUser, loading]
+  );
 
   return (
     <AuthContext.Provider value={value}> {children} </AuthContext.Provider>

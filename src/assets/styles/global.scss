@@ -21,7 +21,8 @@ a {
   cursor: pointer;
 }
 
-button, p {
+button,
+p {
   display: block;
 }
 
@@ -132,11 +133,14 @@ body {
   background: $appBackground;
   display: flex;
   flex-direction: column;
+  font-family: "Fantasy", "Comic Sans", cursive;
+  font-size: 1em;
 }
 
 html {
   scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
+  font-size: 100%;
 }
 
 ol,
