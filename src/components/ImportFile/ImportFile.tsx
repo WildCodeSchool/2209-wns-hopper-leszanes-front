@@ -26,8 +26,7 @@ type UploadResponse = {
 export const ImportFile = () => {
   const [fileList, setFileList] = useState<FileList>();
   const [userFileName, setUserFileName] = useState<string>("");
-  const [fileType, setFileType] = useState<string>("");
-  const [fileSize, setFileSize] = useState<number>(0);
+  const [sendEmail, setSendEmail] = useState<string>("");
   const { user } = useAuth();
   const files = fileList ? [...fileList] : [];
   const [uploadDescription, setUploadDescription] = useState<string>("");
@@ -40,8 +39,6 @@ export const ImportFile = () => {
       if (fileList.length <= 1) {
         const strTitle = fileList[0].name.split(".");
         setUserFileName(strTitle[0]);
-        setFileType(strTitle[1]);
-        setFileSize(fileList[0].size);
       } else {
         let descriptionFilesNames = "Contient les fichiers suivants:";
         Array.from(fileList).forEach((file) => {
@@ -94,19 +91,19 @@ export const ImportFile = () => {
     files.forEach((file) => {
       formData.append(`files`, file, file.name);
     });
+    console.log(formData.values());
     axios
       .post("http://localhost:4000/files/upload", formData)
       .then((res) => {
         if (res.data) {
-          const name = "test";
-          if (user && userFileName && uploadDescription && fileType) {
+          if (user && userFileName && uploadDescription) {
             doCreateFile(
-              name,
               userFileName,
+              res.data.data.fileName,
               uploadDescription,
-              fileType,
+              res.data.data.fileType,
               isPrivate,
-              fileSize,
+              res.data.data.size,
               Number(user.id)
             );
           }
@@ -181,6 +178,11 @@ export const ImportFile = () => {
               inputMode="email"
               placeholder="myemail@email.com"
               disabled={loading}
+              onChange={(e) =>
+                setSendEmail(
+                  (e as ChangeEvent<HTMLTextAreaElement>).target.value
+                )
+              }
             />
           )}
 
