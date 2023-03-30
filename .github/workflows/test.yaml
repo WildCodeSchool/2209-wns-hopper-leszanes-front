@@ -33,4 +33,4 @@ jobs:
               with:
                   push: true
                   context: '{{defaultContext}}'
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/2209-wns-hopper-leszanes-back:${{ steps.set_tag.outputs.tag }}
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/2209-wns-hopper-leszanes-front:${{ steps.set_tag.outputs.tag }}
