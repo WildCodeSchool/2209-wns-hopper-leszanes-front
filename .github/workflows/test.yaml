@@ -24,9 +24,13 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: Set docker image tag name
+              shell: bash
+              run: echo "tag=$(if [ ${{ steps.extract_branch.outputs.branch }} == 'main' ]; then echo 'latest'; else echo ${{ steps.extract_branch.outputs.branch }}; fi)" >>$GITHUB_OUTPUT
+              id: set_tag
             - name: Build and push
               uses: docker/build-push-action@v4
               with:
                   push: true
                   context: '{{defaultContext}}'
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/2209-wns-hopper-leszanes-front:latest
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/2209-wns-hopper-leszanes-back:${{ steps.set_tag.outputs.tag }}

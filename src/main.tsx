@@ -11,8 +11,16 @@ import { setContext } from "@apollo/client/link/context";
 import { router } from "./router";
 import { AuthProvider } from "./contexts/authContext";
 
+const getApiUrl = () => {
+  if (window.location.href.includes("wilders.dev")) {
+    return window.location.href.includes("staging.hopper1.wns.wilders.dev")
+      ? "https://api.staging.hopper1.wns.wilders.dev"
+      : "https://api.hopper1.wns.wilders.dev";
+  }
+  return "http://localhost:5000";
+};
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000/",
+  uri: getApiUrl(),
 });
 
 const authLink = setContext((_, { headers }) => {
