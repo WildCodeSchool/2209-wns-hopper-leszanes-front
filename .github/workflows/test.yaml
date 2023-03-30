@@ -8,8 +8,8 @@ jobs:
         steps:
             - name: Check out code
               uses: actions/checkout@v3
-            - name: Install pnpm run tests
-              run: npm add -g pnpm && pnpm install && pnpm test:ci
+            - name: Install npm run tests
+              run: npm install && npm run test:ci
     docker:
         needs: test-front
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
@@ -24,6 +24,10 @@ jobs:
               with:
                   username: ${{ secrets.DOCKERHUB_USERNAME }}
                   password: ${{ secrets.DOCKERHUB_TOKEN }}
+            - name: Extract branch name
+              shell: bash
+              run: echo "branch=$(echo ${GITHUB_REF#refs/heads/})" >>$GITHUB_OUTPUT
+              id: extract_branch
             - name: Set docker image tag name
               shell: bash
               run: echo "tag=$(if [ ${{ steps.extract_branch.outputs.branch }} == 'main' ]; then echo 'latest'; else echo ${{ steps.extract_branch.outputs.branch }}; fi)" >>$GITHUB_OUTPUT
@@ -33,4 +37,4 @@ jobs:
               with:
                   push: true
                   context: '{{defaultContext}}'
-                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/2209-wns-hopper-leszanes-back:${{ steps.set_tag.outputs.tag }}
+                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/2209-wns-hopper-leszanes-front:${{ steps.set_tag.outputs.tag }}
