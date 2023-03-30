@@ -9,7 +9,7 @@ jobs:
             - name: Check out code
               uses: actions/checkout@v3
             - name: Install pnpm run tests
-              run: npm add -g pnpm && pnpm install && pnpm test:ci
+              run: npm install && npm run test:ci
     docker:
         needs: test-front
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev'
