@@ -12,5 +12,4 @@ COPY public public
 COPY vite.config.ts ./
 COPY vitest.config.ts ./
 
-RUN npm install -g pnpm
-RUN pnpm install
+RUN npm install

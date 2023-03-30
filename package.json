@@ -13,7 +13,7 @@
     "coverage": "pnpm build && vitest run --coverage",
     "test": "pnpm build && vitest",
     "test:ui": "pnpm build && vitest --ui",
-    "test:ci": "pnpm build && vitest run"
+    "test:ci": "npm run build && vitest run"
   },
   "dependencies": {
     "@apollo/client": "3.x",
