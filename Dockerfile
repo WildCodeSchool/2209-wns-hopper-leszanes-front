@@ -3,7 +3,6 @@ FROM node:lts-alpine
 WORKDIR /app
 
 COPY package.json ./
-COPY pnpm-lock.yaml ./
 COPY tsconfig.json ./
 COPY tsconfig.node.json ./
 COPY index.html ./

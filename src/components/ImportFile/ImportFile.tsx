@@ -1,10 +1,12 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
+import confetti from "canvas-confetti";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
 import { createFile } from "../../graphql/createFile";
 import { useAuth } from "../../contexts/authContext";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 
 type UploadFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -28,6 +30,7 @@ export const ImportFile = () => {
   const [userFileName, setUserFileName] = useState<string>("");
   const [fileType, setFileType] = useState<string>("");
   const [fileSize, setFileSize] = useState<number>(0);
+  const [completed, setCompleted] = useState<number>(0);
   const { user } = useAuth();
   const files = fileList ? [...fileList] : [];
   const [uploadDescription, setUploadDescription] = useState<string>("");
@@ -57,6 +60,7 @@ export const ImportFile = () => {
       setFileList(e.target.files);
     }
   };
+
   const doCreateFile = async (
     name: string,
     fileName: string,
@@ -85,6 +89,14 @@ export const ImportFile = () => {
     }
   };
 
+  const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
+    const { loaded, total } = progressEvent;
+    if (total !== undefined) {
+      const percent = Math.floor((loaded * 100) / total);
+      setCompleted(percent);
+    }
+  };
+
   const handleUploadSubmit = (e: UploadFormEvent) => {
     e.preventDefault();
     if (!fileList) {
@@ -95,14 +107,20 @@ export const ImportFile = () => {
       formData.append(`files`, file, file.name);
     });
     axios
-      .post("http://localhost:4000/files/upload", formData)
+      .post("http://localhost:4000/files/upload", formData, {
+        onUploadProgress,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
         if (res.data) {
           const name = "test";
           if (user && userFileName && uploadDescription && fileType) {
+            const fileName = userFileName;
             doCreateFile(
               name,
-              userFileName,
+              fileName,
               uploadDescription,
               fileType,
               isPrivate,
@@ -111,6 +129,13 @@ export const ImportFile = () => {
             );
           }
         }
+      })
+      .then(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
       })
       .catch((err) => console.error(err));
   };
@@ -187,6 +212,12 @@ export const ImportFile = () => {
           <button disabled={loading} type="submit">
             {isPrivate ? "Envoyer" : "Obtenir le lien"}
           </button>
+          <ProgressBar
+            bgcolor="#b2e4eb"
+            completed={completed}
+            textColor="#333"
+            fullText="Terminé"
+          />
         </form>
         {loading && <p>Chargement...</p>}
       </div>
