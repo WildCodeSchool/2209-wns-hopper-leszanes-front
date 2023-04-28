@@ -5,6 +5,7 @@ import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
 import { createFile } from "../../graphql/createFile";
 import { useAuth } from "../../contexts/authContext";
+import { useToast } from "../../contexts/hooks/ToastContext";
 
 type UploadFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -34,6 +35,7 @@ export const ImportFile = () => {
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [doCreateFileMutation, { loading }] =
     useMutation<UploadResponse>(createFile);
+  const { createToast } = useToast();
 
   useEffect(() => {
     if (fileList) {
@@ -81,7 +83,12 @@ export const ImportFile = () => {
         },
       });
     } catch (err) {
-      console.error(err);
+      createToast({
+        id: "create-file-error",
+        title: "Une erreur est survenue",
+        description: "Erreur lors de la création du fichier",
+        variant: "error",
+      });
     }
   };
 
@@ -112,7 +119,14 @@ export const ImportFile = () => {
           }
         }
       })
-      .catch((err) => console.error(err));
+      .catch(() =>
+        createToast({
+          id: "create-file-error-data",
+          title: "Une erreur est survenue",
+          description: "Erreur lors de la création du fichier",
+          variant: "error",
+        })
+      );
   };
 
   return (

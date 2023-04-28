@@ -9,6 +9,7 @@ import { UserProfileView } from "./views/UserProfile/UserProfileView";
 import { HomeView } from "./views/Home/HomeView";
 import { AuthRouteGuard } from "./components/AuthRouteGuard/AuthRouteGuard";
 import { ImportFile } from "./components/ImportFile/ImportFile";
+import { TransfersView } from "./views/Transfers/TransfersView";
 
 export const router = createBrowserRouter([
   {
@@ -33,8 +34,12 @@ export const router = createBrowserRouter([
         element: <ImportFile />,
       },
       {
-        path: "files",
-        element: <h1>My files</h1>,
+        path: "transfers",
+        element: (
+          <AuthRouteGuard>
+            <TransfersView />
+          </AuthRouteGuard>
+        ),
       },
       {
         path: "contacts",

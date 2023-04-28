@@ -1,0 +1,120 @@
+.transferElement {
+  background: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  padding: 15px;
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.02);
+  }
+  &:focus-visible {
+    outline: 2px solid $accentuatedMainColor;
+    outline-offset: 2px;
+  }
+}
+
+.transferElement__details {
+  margin-block: 5px;
+
+  .transferElement__details__header__icon {
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &[open] .transferElement__details__header__icon {
+    transform: rotate(180deg);
+  }
+}
+
+.transferElement__details summary {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  & > * {
+    flex-basis: 40%;
+  }
+}
+
+.transferElement__details summary h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.transferElement__details__header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-basis: 60% !important;
+}
+
+.transferElement__details__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.transferElement__details__actions button div {
+  background: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 999999px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.transferElement__details__actions button:hover div {
+  background: $mainColor;
+}
+
+.transferElement__details__actions
+  button.transferElement__details__actions__delete:hover
+  div {
+  background: $destructive;
+}
+
+.transferElement__details__footer {
+  font-size: 0.75rem;
+  color: hsl(0, 0%, 45%);
+  font-weight: 600;
+  margin-top: 10px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.transferElement__checkbox__container {
+  display: inline-flex;
+  margin-right: 15px;
+}
+
+.transferElement__checkbox {
+  height: 45px;
+  width: 45px;
+  border-radius: 50%;
+  display: inline-flex;
+  box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+  background: $appBackground;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+  border: 10px solid #fff;
+  &:checked {
+    background: $mainColor;
+  }
+  &::before {
+    top: -3px;
+    right: -3px;
+    transition: all 0.2s ease-in-out;
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+    position: absolute;
+    opacity: 0;
+  }
+  &:checked::before {
+    opacity: 1;
+  }
+}

@@ -13,12 +13,11 @@ export const MobileNavbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/login">
+          <NavLink to="/transfers">
             <Folders />
-            <span>Fichiers</span>
+            <span>Transferts</span>
           </NavLink>
         </li>
-        {/* https://reactrouter.com/en/main/components/nav-link */}
         <li>
           <NavLink to="/upload" className={styles.uploadButton}>
             <Upload size={35} />

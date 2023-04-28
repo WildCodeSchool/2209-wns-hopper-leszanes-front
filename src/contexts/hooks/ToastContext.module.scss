@@ -1,0 +1,16 @@
+.toasts {
+  top: 0;
+  right: 0;
+  position: fixed;
+  z-index: 999;
+  user-select: none;
+  user-zoom: none;
+  -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 20px;
+  overflow: hidden;
+  gap: 25px;
+}

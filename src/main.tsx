@@ -10,6 +10,7 @@ import { RouterProvider } from "react-router-dom";
 import { setContext } from "@apollo/client/link/context";
 import { router } from "./router";
 import { AuthProvider } from "./contexts/authContext";
+import { ToastContextProvider } from "./contexts/hooks/ToastContext";
 
 const getApiUrl = () => {
   if (window.location.href.includes("wilders.dev")) {
@@ -26,6 +27,7 @@ const httpLink = createHttpLink({
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem("token");
   return {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     headers: {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
@@ -43,7 +45,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ApolloProvider client={client}>
       <AuthProvider>
-        <RouterProvider router={router} />
+        <ToastContextProvider>
+          <RouterProvider router={router} />
+        </ToastContextProvider>
       </AuthProvider>
     </ApolloProvider>
   </React.StrictMode>

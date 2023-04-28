@@ -49,8 +49,9 @@ rules:
     prettier/prettier:
         - error
         - endOfLine: auto
-    "@typescript-eslint/no-misused-promises":
+    '@typescript-eslint/no-misused-promises':
         - error
         - checksVoidReturn: false
-    "@typescript-eslint/no-floating-promises":
+    '@typescript-eslint/no-floating-promises':
         - off
+    import/no-cycle: 'off'

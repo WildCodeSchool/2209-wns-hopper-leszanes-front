@@ -8,6 +8,7 @@ import { signIn } from "../../graphql/singIn";
 import { UserWithToken } from "../../types/UserWithToken";
 import { useAuth } from "../../contexts/authContext";
 import { LoadingLayout } from "../../components/LoadingLayout/LoadingLayout";
+import { Button } from "../../components/Button/Button";
 
 type SignInFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -107,10 +108,12 @@ export const LoginView = () => {
             }
             labelProps={{ className: styles.passwordLabel }}
           />
-          <button disabled={loading} type="submit">
+          <Button disabled={loading} type="submit">
             Se connecter
-          </button>
-          <NavLink to="/register">S'enregistrer</NavLink>
+          </Button>
+          <Button>
+            <NavLink to="/register">S'enregistrer</NavLink>
+          </Button>
         </form>
         {loading && <p>Chargement...</p>}
         {!loading && wrongCredentials && (
