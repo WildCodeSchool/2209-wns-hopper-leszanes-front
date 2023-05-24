@@ -26,8 +26,8 @@ type UploadResponse = {
 };
 
 export const ImportFile = () => {
+  const [fileName, setFileName] = useState<string>("");
   const [fileList, setFileList] = useState<FileList>();
-  const [userFileName, setUserFileName] = useState<string>("");
   const [fileType, setFileType] = useState<string>("");
   const [fileSize, setFileSize] = useState<number>(0);
   const [completed, setCompleted] = useState<number>(0);
@@ -42,7 +42,7 @@ export const ImportFile = () => {
     if (fileList) {
       if (fileList.length <= 1) {
         const strTitle = fileList[0].name.split(".");
-        setUserFileName(strTitle[0]);
+        setFileName(strTitle[0]);
         setFileType(strTitle[1]);
         setFileSize(fileList[0].size);
       } else {
@@ -63,7 +63,6 @@ export const ImportFile = () => {
 
   const doCreateFile = async (
     name: string,
-    fileName: string,
     description: string,
     type: string,
     is_private: boolean,
@@ -75,7 +74,6 @@ export const ImportFile = () => {
         variables: {
           data: {
             name,
-            fileName,
             description,
             type,
             is_private,
@@ -85,7 +83,7 @@ export const ImportFile = () => {
         },
       });
     } catch (err) {
-      console.error(err);
+      throw new Error(JSON.stringify(err));
     }
   };
 
@@ -115,11 +113,8 @@ export const ImportFile = () => {
       })
       .then((res) => {
         if (res.data) {
-          const name = "test";
-          if (user && userFileName && uploadDescription && fileType) {
-            const fileName = userFileName;
+          if (user && fileName && uploadDescription && fileType) {
             doCreateFile(
-              name,
               fileName,
               uploadDescription,
               fileType,
@@ -159,7 +154,7 @@ export const ImportFile = () => {
         />
 
         <form onSubmit={handleUploadSubmit}>
-          <InputGroup
+          {/* <InputGroup
             label="Nom du fichier"
             name="fileName"
             type="text"
@@ -172,7 +167,7 @@ export const ImportFile = () => {
                 (e as ChangeEvent<HTMLInputElement>).target.value
               );
             }}
-          />
+          /> */}
           <InputGroup
             as="textarea"
             label="Description"
