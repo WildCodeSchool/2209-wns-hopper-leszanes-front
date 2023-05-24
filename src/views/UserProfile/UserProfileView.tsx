@@ -5,15 +5,15 @@ import style from "./UserProfileView.module.scss";
 export const UserProfileView = () => {
   const { user } = useAuth();
   const textColor = "#000";
-  const completed = 95;
+  const completed = 91;
   const setColor = () => {
     if (completed > 60 && completed < 90) {
-      return "orange";
+      return "#f27800";
     }
     if (completed >= 90) {
-      return "red";
+      return "#DF2525";
     }
-    return "green";
+    return "#69b870";
   };
 
   return (
