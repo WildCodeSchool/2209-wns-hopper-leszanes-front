@@ -6,7 +6,7 @@ services:
         volumes:
             - ./src:/app/src
             - ./public:/app/public
-        command: pnpm run dev
+        command: npm run dev
         container_name: ztransfer_app
         restart: unless-stopped
         environment:

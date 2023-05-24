@@ -1,10 +1,12 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
+import confetti from "canvas-confetti";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
 import { createFile } from "../../graphql/createFile";
 import { useAuth } from "../../contexts/authContext";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 
 type UploadFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -24,10 +26,11 @@ type UploadResponse = {
 };
 
 export const ImportFile = () => {
+  const [fileName, setFileName] = useState<string>("");
   const [fileList, setFileList] = useState<FileList>();
-  const [userFileName, setUserFileName] = useState<string>("");
   const [fileType, setFileType] = useState<string>("");
   const [fileSize, setFileSize] = useState<number>(0);
+  const [completed, setCompleted] = useState<number>(0);
   const { user } = useAuth();
   const files = fileList ? [...fileList] : [];
   const [uploadDescription, setUploadDescription] = useState<string>("");
@@ -39,7 +42,7 @@ export const ImportFile = () => {
     if (fileList) {
       if (fileList.length <= 1) {
         const strTitle = fileList[0].name.split(".");
-        setUserFileName(strTitle[0]);
+        setFileName(strTitle[0]);
         setFileType(strTitle[1]);
         setFileSize(fileList[0].size);
       } else {
@@ -57,9 +60,9 @@ export const ImportFile = () => {
       setFileList(e.target.files);
     }
   };
+
   const doCreateFile = async (
     name: string,
-    fileName: string,
     description: string,
     type: string,
     is_private: boolean,
@@ -71,7 +74,6 @@ export const ImportFile = () => {
         variables: {
           data: {
             name,
-            fileName,
             description,
             type,
             is_private,
@@ -81,7 +83,15 @@ export const ImportFile = () => {
         },
       });
     } catch (err) {
-      console.error(err);
+      throw new Error(JSON.stringify(err));
+    }
+  };
+
+  const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
+    const { loaded, total } = progressEvent;
+    if (total !== undefined) {
+      const percent = Math.floor((loaded * 100) / total);
+      setCompleted(percent);
     }
   };
 
@@ -95,14 +105,17 @@ export const ImportFile = () => {
       formData.append(`files`, file, file.name);
     });
     axios
-      .post("http://localhost:4000/files/upload", formData)
+      .post("http://localhost:4000/files/upload", formData, {
+        onUploadProgress,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
         if (res.data) {
-          const name = "test";
-          if (user && userFileName && uploadDescription && fileType) {
+          if (user && fileName && uploadDescription && fileType) {
             doCreateFile(
-              name,
-              userFileName,
+              fileName,
               uploadDescription,
               fileType,
               isPrivate,
@@ -111,6 +124,13 @@ export const ImportFile = () => {
             );
           }
         }
+      })
+      .then(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
       })
       .catch((err) => console.error(err));
   };
@@ -134,7 +154,7 @@ export const ImportFile = () => {
         />
 
         <form onSubmit={handleUploadSubmit}>
-          <InputGroup
+          {/* <InputGroup
             label="Nom du fichier"
             name="fileName"
             type="text"
@@ -147,7 +167,7 @@ export const ImportFile = () => {
                 (e as ChangeEvent<HTMLInputElement>).target.value
               );
             }}
-          />
+          /> */}
           <InputGroup
             as="textarea"
             label="Description"
@@ -187,6 +207,12 @@ export const ImportFile = () => {
           <button disabled={loading} type="submit">
             {isPrivate ? "Envoyer" : "Obtenir le lien"}
           </button>
+          <ProgressBar
+            bgcolor="#b2e4eb"
+            completed={completed}
+            textColor="#333"
+            fullText="Terminé"
+          />
         </form>
         {loading && <p>Chargement...</p>}
       </div>

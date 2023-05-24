@@ -2,6 +2,7 @@
 v2.0 | 20110126
 License: none (public domain)
 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;600&display=swap');
 
 *:not(svg, svg *),
 *::before,
@@ -133,7 +134,7 @@ body {
   background: $appBackground;
   display: flex;
   flex-direction: column;
-  font-family: "Fantasy", "Comic Sans", cursive;
+  font-family: "Inter", sans-serif;
   font-size: 1em;
 }
 
