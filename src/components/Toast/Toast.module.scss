@@ -1,3 +1,12 @@
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .toast {
   background: #fff;
   border-radius: 15px;
@@ -10,6 +19,7 @@
   gap: 5px;
   min-width: max-content;
   position: relative;
+  animation: slideInFromRight 0.25s cubic-bezier(0.25, 0.4, 0.55, 1.4);
 }
 
 .toast__icon {

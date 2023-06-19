@@ -1,4 +1,4 @@
-.confirmDialog {
+.dialog {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,30 +13,34 @@
   padding: 30px;
 }
 
-.confirmDialog__content {
+.dialog__content {
   background: #fff;
   border-radius: 15px;
-  padding: 20px;
+  padding: 30px;
   min-width: max-content;
   max-width: 90%;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  position: relative;
 }
 
-.confirmDialog__content h2 {
+.dialog__content h2 {
   font-weight: 700;
   font-size: 1.3rem;
 }
 @media screen and (min-width: 768px) {
-  .confirmDialog {
+  .dialog {
     align-items: center;
   }
 }
 
-.confirmDialog__buttons {
-  display: flex;
+.dialog__close{
+  width: 35px;
+  display: inline-flex;
+  position: absolute;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
+  top: 15px;
+  right: 10px;
 }

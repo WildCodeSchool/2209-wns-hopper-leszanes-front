@@ -4,7 +4,7 @@ import { useMutation } from "@apollo/client";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { InputGroup } from "../../components/InputGroup/InputGroup";
 import styles from "./LoginView.module.scss";
-import { signIn } from "../../graphql/singIn";
+import { signIn } from "../../graphql/user/singIn";
 import { UserWithToken } from "../../types/UserWithToken";
 import { useAuth } from "../../contexts/authContext";
 import { LoadingLayout } from "../../components/LoadingLayout/LoadingLayout";
@@ -17,10 +17,6 @@ type SignInFormEvent = FormEvent<HTMLFormElement> & {
   };
 };
 
-type LoginResponse = {
-  signIn: UserWithToken;
-};
-
 export const LoginView = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,7 +24,9 @@ export const LoginView = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [wrongCredentials, setWrongCredential] = useState(false);
   const icon = showPassword ? <EyeOff /> : <Eye />;
-  const [doSigninMutation, { loading }] = useMutation<LoginResponse>(signIn);
+  const [doSigninMutation, { loading }] = useMutation<{
+    signIn: UserWithToken;
+  }>(signIn);
 
   useEffect(() => {
     if (user) {
@@ -108,10 +106,10 @@ export const LoginView = () => {
             }
             labelProps={{ className: styles.passwordLabel }}
           />
-          <Button disabled={loading} type="submit">
+          <Button isLoading={loading} type="submit">
             Se connecter
           </Button>
-          <Button>
+          <Button isLoading={loading}>
             <NavLink to="/register">S'enregistrer</NavLink>
           </Button>
         </form>

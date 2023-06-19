@@ -9,7 +9,7 @@ import {
   Unlock,
   Users,
 } from "lucide-react";
-import { MouseEvent, useState } from "react";
+import { FormEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { Transfer } from "../../types/Transfer";
@@ -18,37 +18,55 @@ import { ToolTip } from "../ToolTip/ToolTip";
 import { useAuth } from "../../contexts/authContext";
 import styles from "./TransferElement.module.scss";
 import { ConfirmDialog } from "../ConfirmDialog/ConfirmDialog";
-import { deleteCurrentUserTransferId } from "../../graphql/deleteCurrentUserTransferId";
+import { deleteCurrentUserTransfer } from "../../graphql/transfer/deleteCurrentUserTransfer";
 import { useToast } from "../../contexts/hooks/ToastContext";
 import { LoadingLayout } from "../LoadingLayout/LoadingLayout";
+import { Dialog } from "../Dialog/Dialog";
+import { EditTransferForm } from "../../views/Transfers/forms/EditTransferForm/EditTransferForm";
+import { getFormData } from "../../utils/forms";
+import { updateCurrentUserTransfer } from "../../graphql/transfer/updateCurrentUserTransfer";
+import { EditUsersForm } from "../../views/Transfers/forms/EditUsersForm/EditUsersForm";
+import { User } from "../../types/User";
 
 export type TransferElementProps = {
-  transfer: Transfer;
-  onDelete: () => void;
+  transferData: Transfer;
+  refresh: () => void;
+  onSelectChange: (id: number) => void;
+  isSelected?: boolean;
 };
 
 export const TransferElement = ({
-  transfer,
-  onDelete,
+  transferData,
+  refresh,
+  onSelectChange,
+  isSelected,
 }: TransferElementProps) => {
-  const [isPrivate, setIsPrivate] = useState(transfer.isPrivate);
+  const [transfer, setTransfer] = useState<Transfer>(transferData);
   const [isConfirmDeleteDialogOpen, setIsConfirmDeleteDialogOpen] =
     useState(false);
-  const [doDeleteMutation, { loading }] = useMutation<boolean>(
-    deleteCurrentUserTransferId
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [doDeleteMutation, { loading: isDeleteLoading }] = useMutation<boolean>(
+    deleteCurrentUserTransfer
   );
-  const [isSelected, setIsSelected] = useState(false);
   const { createToast } = useToast();
   const createdAt = formatDateToLocalFrenchHour(transfer.createdAt);
   const updatedAt = formatDateToLocalFrenchHour(transfer.updatedAt);
   const isoStringCreatedAt = new Date(transfer.createdAt).toISOString();
   const isoStringUpdatedAt = new Date(transfer.updatedAt).toISOString();
-
+  const [doUpdateMutation, { loading: isUpdateLoading }] = useMutation<{
+    updateCurrentUserTransfer: Transfer;
+  }>(updateCurrentUserTransfer);
   const { user } = useAuth();
+  const [isUsersEditDialogOpen, setIsUsersEditDialogOpen] = useState(false);
 
   const handleDelete = (e: MouseEvent) => {
     e.preventDefault();
     setIsConfirmDeleteDialogOpen(true);
+  };
+
+  const handleEdit = (e: MouseEvent) => {
+    e.preventDefault();
+    setIsEditDialogOpen(true);
   };
 
   const deleteTransfer = async () => {
@@ -58,17 +76,17 @@ export const TransferElement = ({
           deleteCurrentUserTransferId: transfer.id,
         },
       });
-      if (!loading && data) {
+      if (!isDeleteLoading && data) {
         createToast({
           id: "deletedTransferSuccess",
           title: "Suppression du transfert",
           description: "Le transfert a bien été supprimé",
           variant: "success",
         });
-        onDelete();
+        refresh();
         return;
       }
-      if (!loading && !data) {
+      if (!isDeleteLoading && !data) {
         createToast({
           id: "deletedTransferError",
           title: "Suppression du transfert",
@@ -93,8 +111,77 @@ export const TransferElement = ({
     }
     setIsConfirmDeleteDialogOpen(false);
   };
+  const updateTransfer = async (dataToUpdate: object) => {
+    const data = {
+      ...transfer,
+      ...dataToUpdate,
+      id: transfer.id,
+      isPrivate: undefined,
+      createdAt: undefined,
+      updatedAt: undefined,
+      __typename: undefined,
+      createdBy: undefined,
+    };
 
-  if (loading) {
+    try {
+      const { data: response } = await doUpdateMutation({
+        variables: {
+          data,
+        },
+      });
+      if (!isUpdateLoading && response) {
+        createToast({
+          id: "updatedTransferSuccess",
+          title: "Modification du transfert",
+          description: "Le transfert a bien été modifié",
+          variant: "success",
+        });
+        setTransfer((prev) => {
+          return {
+            ...prev,
+            name: response.updateCurrentUserTransfer.name,
+            description: response.updateCurrentUserTransfer.description,
+            updatedAt: response.updateCurrentUserTransfer.updatedAt,
+            users: response.updateCurrentUserTransfer.users,
+            files: response.updateCurrentUserTransfer.files,
+          };
+        });
+        setIsEditDialogOpen(false);
+        return;
+      }
+      if (!isUpdateLoading && !response) {
+        createToast({
+          id: "updatedTransferError",
+          title: "Modification du transfert",
+          description: "Le transfert n'a pas pu être modifié",
+          variant: "error",
+        });
+        return;
+      }
+    } catch (err) {
+      createToast({
+        id: "updatedTransferCatchError",
+        title: "Modification du transfert",
+        description: "Le transfert n'a pas pu être modifié",
+        variant: "error",
+      });
+    }
+  };
+
+  const handleSubmitEdit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = getFormData(e);
+    updateTransfer(formData);
+  };
+
+  const handleUpdateTransferUsers = (users: User[]) => {
+    const data = {
+      userIds: users.map((u) => u.id),
+    };
+    updateTransfer(data);
+  };
+
+  if (isDeleteLoading) {
     return <LoadingLayout />;
   }
   return (
@@ -106,10 +193,10 @@ export const TransferElement = ({
               <div className={styles.transferElement__checkbox__container}>
                 <input
                   className={styles.transferElement__checkbox}
-                  onChange={(e) => {
-                    setIsSelected(e.target.checked);
+                  onChange={() => {
+                    onSelectChange(transfer.id);
                   }}
-                  checked={isSelected}
+                  checked={isSelected ?? false}
                   type="checkbox"
                   name={`transfer-${transfer.id}`}
                   id={`transfer-${transfer.id}`}
@@ -118,7 +205,9 @@ export const TransferElement = ({
               <ChevronDown
                 className={styles.transferElement__details__header__icon}
               />
-              <h2>{transfer.name}</h2>
+              <h2>
+                {transfer.id} - {transfer.name}
+              </h2>
             </div>
             <div>
               <div className={styles.transferElement__details__actions}>
@@ -136,24 +225,26 @@ export const TransferElement = ({
                 </span>
                 {transfer.createdBy.id === user?.id ? (
                   <>
+                    {transfer.isPrivate ? (
+                      <ToolTip
+                        content="Partage privé"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Lock width={20} height={20} />
+                      </ToolTip>
+                    ) : (
+                      <ToolTip content="Partage public">
+                        <Unlock width={20} height={20} />
+                      </ToolTip>
+                    )}
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setIsPrivate((prev) => !prev);
-                      }}
+                      onClick={() => setIsUsersEditDialogOpen(true)}
                     >
-                      {isPrivate ? (
-                        <ToolTip content="Partage privé">
-                          <Lock />
-                        </ToolTip>
-                      ) : (
-                        <ToolTip content="Partage public">
-                          <Unlock />
-                        </ToolTip>
-                      )}
-                    </button>
-                    <button type="button">
                       <ToolTip content="Partagé avec">
                         <Users width={20} height={20} />
                       </ToolTip>
@@ -163,7 +254,7 @@ export const TransferElement = ({
                         <Files width={20} height={20} />
                       </ToolTip>
                     </button>
-                    <button type="button">
+                    <button type="button" onClick={handleEdit}>
                       <ToolTip content="Modifier">
                         <Edit2 width={20} height={20} />
                       </ToolTip>
@@ -209,15 +300,36 @@ export const TransferElement = ({
           </p>
         </details>
       </li>
-      {isConfirmDeleteDialogOpen && (
-        <ConfirmDialog
-          title="Supprimer le transfert"
-          onClose={handleOnConfirmDeleteDialogOpen}
-          open={isConfirmDeleteDialogOpen}
-        >
-          <p>Êtes-vous sûr de vouloir supprimer ce transfert ?</p>
-        </ConfirmDialog>
-      )}
+      <ConfirmDialog
+        title="Supprimer le transfert"
+        onClose={handleOnConfirmDeleteDialogOpen}
+        open={isConfirmDeleteDialogOpen}
+      >
+        <p>Êtes-vous sûr de vouloir supprimer ce transfert ?</p>
+      </ConfirmDialog>
+      <Dialog
+        title="Modifier le transfert"
+        onOpenChange={setIsEditDialogOpen}
+        open={isEditDialogOpen}
+      >
+        <EditTransferForm
+          isLoading={isUpdateLoading}
+          name={transfer.name}
+          description={transfer.description}
+          onSubmit={handleSubmitEdit}
+        />
+      </Dialog>
+      <Dialog
+        title="Partagé avec"
+        onOpenChange={setIsUsersEditDialogOpen}
+        open={isUsersEditDialogOpen}
+      >
+        <EditUsersForm
+          transferId={transfer.id}
+          isLoading={isUpdateLoading}
+          updateUsersTransfer={handleUpdateTransferUsers}
+        />
+      </Dialog>
     </>
   );
 };

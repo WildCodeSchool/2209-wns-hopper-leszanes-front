@@ -16,7 +16,7 @@ export const Toast = ({ title, description, variant }: ToastProps) => {
   if (variant === "error")
     computedClassName = `${styles.toast} ${styles.toast__error}`;
   return (
-    <Root duration={3000} className={computedClassName}>
+    <Root duration={2000} className={computedClassName}>
       <Title className={styles.toast__title}>{title}</Title>
       <Description className={styles.toast__description}>
         {description}

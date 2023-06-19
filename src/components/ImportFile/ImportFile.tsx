@@ -3,7 +3,7 @@ import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
-import { createFile } from "../../graphql/createFile";
+import { createFile } from "../../graphql/file/createFile";
 import { useAuth } from "../../contexts/authContext";
 import { useToast } from "../../contexts/hooks/ToastContext";
 

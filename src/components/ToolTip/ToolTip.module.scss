@@ -1,6 +1,8 @@
 .toolTip {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   .toolTip__content {
     transition: all 0.2s ease-in-out;
@@ -13,8 +15,6 @@
     padding: 8px 13px;
     min-width: max-content;
     top: -75px;
-    left: 50%;
-    transform: translateX(-50%);
     z-index: 1;
     user-select: none;
     pointer-events: none;

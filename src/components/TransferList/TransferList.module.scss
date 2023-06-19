@@ -3,3 +3,37 @@
   flex-direction: column;
   gap: 15px;
 }
+
+.transferList__close {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 99999px;
+  padding: 15px;
+}
+
+.transferList__header {
+  background: #fff;
+  padding-inline: 25px;
+  padding-block: 15px;
+  border-radius: 35px;
+  border: 2px solid #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+}
+
+.transferList__noResult {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+}

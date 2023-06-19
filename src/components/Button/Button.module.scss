@@ -12,8 +12,14 @@
   box-shadow: 0px 0px 3px 0px rgba(123, 123, 123, 0.75);
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  outline: 3px solid transparent;
+  outline-offset: 3px;
+
   &:hover {
     background: $accentuatedMainColor;
+  }
+  &:focus-visible {
+    outline-color: $accentuatedMainColor;
   }
   user-select: none;
 }
@@ -36,5 +42,16 @@
   box-shadow: none;
   &:hover {
     background: hsla(0, 0%, 50%, 0.1);
+  }
+}
+
+.button__loading {
+  & > :is(.button__icon, .button__text) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  & .button__loader {
+    opacity: 1;
+    position: absolute;
   }
 }

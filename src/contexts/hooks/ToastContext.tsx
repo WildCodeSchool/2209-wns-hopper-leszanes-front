@@ -78,7 +78,12 @@ export const useToast = () => {
   const { createToastRef } = useContext(toastContext);
   const createToast = useCallback(
     (toast: ToastType) => {
-      createToastRef.current(toast);
+      createToastRef.current({
+        ...toast,
+        id: toast.id
+          ? toast.id + Math.random().toString()
+          : Math.random().toString(),
+      });
     },
     [createToastRef]
   );

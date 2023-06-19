@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { Button } from "../Button/Button";
 import styles from "./ConfirmDialog.module.scss";
 
@@ -14,32 +15,39 @@ export const ConfirmDialog = ({
   onClose,
   title,
 }: PropsWithChildren<ConfirmDialogProps>) => {
-  const uuid = Math.random().toString(36).substring(2, 15);
   return (
-    <dialog id={uuid} open={open} className={styles.confirmDialog}>
-      <form method="dialog" className={styles.confirmDialog__form}>
-        <h2>{title}</h2>
-        {children}
-        <menu className={styles.confirmDialog__form__menu}>
-          <Button
-            variant="muted"
-            type="button"
-            value="cancel"
-            onClick={() => onClose("cancel")}
-          >
-            Annuler
-          </Button>
-          <Button
-            variant="destructive"
-            type="submit"
-            id={`confirm-btn-${uuid}`}
-            value="default"
-            onClick={() => onClose("confirm")}
-          >
-            Confirmer
-          </Button>
-        </menu>
-      </form>
-    </dialog>
+    <AlertDialog.Root open={open} onOpenChange={() => onClose("cancel")}>
+      <AlertDialog.Portal>
+        <AlertDialog.Overlay className={styles.confirmDialog}>
+          <AlertDialog.Content className={styles.confirmDialog__content}>
+            <AlertDialog.Title asChild>
+              <h2>{title}</h2>
+            </AlertDialog.Title>
+            <AlertDialog.Description asChild>
+              {children}
+            </AlertDialog.Description>
+            <div className={styles.confirmDialog__buttons}>
+              <AlertDialog.Cancel asChild>
+                <Button
+                  variant="muted"
+                  type="button"
+                  onClick={() => onClose("cancel")}
+                >
+                  Annuler
+                </Button>
+              </AlertDialog.Cancel>
+              <AlertDialog.Action asChild>
+                <Button
+                  variant="destructive"
+                  onClick={() => onClose("confirm")}
+                >
+                  Confirmer
+                </Button>
+              </AlertDialog.Action>
+            </div>
+          </AlertDialog.Content>
+        </AlertDialog.Overlay>
+      </AlertDialog.Portal>
+    </AlertDialog.Root>
   );
 };
