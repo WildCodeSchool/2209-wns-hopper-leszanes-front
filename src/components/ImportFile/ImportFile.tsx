@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { useMutation } from "@apollo/client";
@@ -28,12 +29,37 @@ export const ImportFile = () => {
   const [userFileName, setUserFileName] = useState<string>("");
   const [sendEmail, setSendEmail] = useState<string>("");
   const { user } = useAuth();
-  const files = fileList ? [...fileList] : [];
-  const [uploadDescription, setUploadDescription] = useState<string>("");
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [doCreateFileMutation, { loading }] =
-    useMutation<UploadResponse>(createFile);
+=======
+import { ChangeEvent, useState } from "react";
+import axios, { AxiosProgressEvent } from "axios";
+import { useMutation } from "@apollo/client";
+import confetti from "canvas-confetti";
+import { CloudOff, Upload, X } from "lucide-react";
+import { InputGroup } from "../InputGroup/InputGroup";
+import styles from "./ImportFile.module.scss";
+import { createFile } from "../../graphql/createFile";
+import { createTransfer } from "../../graphql/createTransfer";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
+import { UploadFilesResponse } from "../../types/UploadFilesResponse";
+import { CreateTransferResponse } from "../../types/CreateTransferResponse";
+import { UploadResponse } from "../../types/UploadResponse";
+import { UploadFormEvent } from "../../types/UploadFormEvent";
 
+export const ImportFile = () => {
+  const [transferName, setTransferName] = useState<string>("");
+  const [transferId, setTransferId] = useState<number>();
+  const [fileList, setFileList] = useState<FileList>();
+  const [completed, setCompleted] = useState<number>(0);
+>>>>>>> Stashed changes
+  const files = fileList ? [...fileList] : [];
+  const [transferDescription, setTransferDescription] = useState<string>("");
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [doCreateFileMutation, { loading: fileLoading }] =
+    useMutation<UploadResponse>(createFile);
+  const [doCreateTransferMutation] =
+    useMutation<CreateTransferResponse>(createTransfer);
+
+<<<<<<< Updated upstream
   useEffect(() => {
     if (fileList) {
       if (fileList.length <= 1) {
@@ -48,12 +74,30 @@ export const ImportFile = () => {
       }
     }
   }, [fileList]);
+=======
+  // useEffect(() => {
+  //   if (fileList) {
+  //     if (fileList.length <= 1) {
+  //       const strTitle = fileList[0].name.split(".");
+  //     } else {
+  //       let descriptionFilesNames = "Contient les fichiers suivants:";
+  //       Array.from(fileList).forEach((file) => {
+  //         descriptionFilesNames += `\n-${file.name}`;
+  //       });
+  //       setTransferDescription(descriptionFilesNames);
+  //     }
+  //   }
+  // }, [fileList]);
+>>>>>>> Stashed changes
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFileList(e.target.files);
+    } else {
+      setFileList(undefined);
     }
   };
+<<<<<<< Updated upstream
   const doCreateFile = async (
     name: string,
     fileName: string,
@@ -63,17 +107,51 @@ export const ImportFile = () => {
     size: number,
     created_by: number
   ) => {
+=======
+
+  const handleRemoveFile = () => {
+    console.log("delete file");
+  };
+
+  const doCreateTransfer = async (name: string, description: string) => {
+    try {
+      await doCreateTransferMutation({
+        variables: {
+          data: {
+            name,
+            description,
+            isPrivate,
+          },
+        },
+      })
+        .then((res) => {
+          if (res.data) {
+            setTransferId(Number(res.data.createTransfer.id));
+          }
+        })
+        .catch((err) => {
+          throw new Error(JSON.stringify(err));
+        });
+    } catch (err) {
+      throw new Error(JSON.stringify(err));
+    }
+  };
+
+  const doCreateFile = async (name: string, type: string, size: number) => {
+>>>>>>> Stashed changes
     try {
       await doCreateFileMutation({
         variables: {
           data: {
             name,
+<<<<<<< Updated upstream
             fileName,
             description,
+=======
+>>>>>>> Stashed changes
             type,
-            is_private,
             size,
-            created_by,
+            transferId,
           },
         },
       });
@@ -91,6 +169,7 @@ export const ImportFile = () => {
     files.forEach((file) => {
       formData.append(`files`, file, file.name);
     });
+<<<<<<< Updated upstream
     console.log(formData.values());
     axios
       .post("http://localhost:4000/files/upload", formData)
@@ -107,31 +186,79 @@ export const ImportFile = () => {
               Number(user.id)
             );
           }
+=======
+    doCreateTransfer(transferName, transferDescription);
+    axios
+      .post<{ filesUpload: UploadFilesResponse[] }>(
+        "http://localhost:4000/files/upload",
+        formData,
+        {
+          onUploadProgress,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+>>>>>>> Stashed changes
         }
+      )
+      .then((res) => {
+        if (res.data.filesUpload.length > 0) {
+          res.data.filesUpload.forEach((file) => {
+            doCreateFile(file.filename, file.mimetype, file.size);
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(err);
       })
       .catch((err) => console.error(err));
   };
-
+  const generateKey = (pre: string) => {
+    return `${pre}_${new Date().getTime()}`;
+  };
   return (
     <div className={styles.sendFileContainer}>
       <div>
         <h1>Importer un fichier</h1>
+        <div className={styles.inputFileContainer}>
+          {fileList &&
+            files.map((file, index) => (
+              <div
+                key={generateKey(file.name)}
+                className={styles.hoverForRemoveCross}
+              >
+                <div className={styles.titleRemoveContainer}>
+                  <p>{file.name}</p>
+                  <X
+                    size="20"
+                    color="#df2525"
+                    className={styles.removeFileSvg}
+                    onClick={handleRemoveFile}
+                    id={index}
+                  />
+                </div>
+                <p>
+                  {file.size} · {file.type.split("/").pop()}
+                </p>
+              </div>
+            ))}
 
-        <InputGroup
-          label="Charger un fichier"
-          name="inputTag"
-          onChange={(e) => {
-            handleFileChange(e as ChangeEvent<HTMLInputElement>);
-          }}
-          type="file"
-          disabled={loading}
-          multiple
-          placeholder=""
-          inputMode="none"
-        />
+          <label htmlFor="file" className={styles.labelImportFile}>
+            <Upload size="25" className={styles.uploadSvg} />
+            Chargez vos fichiers
+            <input
+              type="file"
+              name="file"
+              id="file"
+              className={styles.inputfile}
+              multiple
+              onChange={handleFileChange}
+            />
+          </label>
+        </div>
 
         <form onSubmit={handleUploadSubmit}>
           <InputGroup
+<<<<<<< Updated upstream
             label="Nom du fichier"
             name="fileName"
             type="text"
@@ -144,6 +271,16 @@ export const ImportFile = () => {
                 (e as ChangeEvent<HTMLInputElement>).target.value
               );
             }}
+=======
+            inputMode="text"
+            label="Titre du transfer"
+            name="transferName"
+            type="text"
+            placeholder="Dossier photos"
+            disabled={fileLoading}
+            value={transferName}
+            onChange={(e) => setTransferName(e.target.value)}
+>>>>>>> Stashed changes
           />
           <InputGroup
             as="textarea"
@@ -152,10 +289,10 @@ export const ImportFile = () => {
             type="textarea"
             placeholder="Description"
             inputMode="text"
-            disabled={loading}
-            value={uploadDescription}
+            disabled={fileLoading}
+            value={transferDescription}
             onChange={(e) =>
-              setUploadDescription(
+              setTransferDescription(
                 (e as ChangeEvent<HTMLTextAreaElement>).target.value
               )
             }
@@ -177,20 +314,24 @@ export const ImportFile = () => {
               type="text"
               inputMode="email"
               placeholder="myemail@email.com"
+<<<<<<< Updated upstream
               disabled={loading}
               onChange={(e) =>
                 setSendEmail(
                   (e as ChangeEvent<HTMLTextAreaElement>).target.value
                 )
               }
+=======
+              disabled={fileLoading}
+>>>>>>> Stashed changes
             />
           )}
 
-          <button disabled={loading} type="submit">
+          <button disabled={fileLoading} type="submit">
             {isPrivate ? "Envoyer" : "Obtenir le lien"}
           </button>
         </form>
-        {loading && <p>Chargement...</p>}
+        {fileLoading && <p>Chargement...</p>}
       </div>
     </div>
   );

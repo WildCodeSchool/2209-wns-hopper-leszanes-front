@@ -71,7 +71,6 @@ export const InputGroup = ({
       <label htmlFor={name} {...labelProps}>
         <span>{label}</span>
         <div className={styles.inputFieldContainer}>
-          {/* @ts-expect-error */}
           <Tag
             autoComplete={autoComplete}
             inputMode={
