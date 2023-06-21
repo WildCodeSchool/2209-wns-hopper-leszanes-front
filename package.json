@@ -26,7 +26,10 @@
     "canvas-confetti": "^1.6.0",
     "classnames-generics": "^1.0.9",
     "graphql": "~15.8.0",
+    "@types/react-lottie": "^1.2.6",
+    "lottie-react": "^2.4.0",
     "lucide-react": "0.105.0-alpha.4",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.2"

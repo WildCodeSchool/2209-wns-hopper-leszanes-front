@@ -90,6 +90,7 @@ export const InputGroup = ({
         <span>{label}</span>
         <div className={computedClassName}>
           {/* @ts-expect-error should throw an error if the type does not accept the prop */}
+        <div className={styles.inputFieldContainer}>
           <Tag
             autoComplete={autoComplete}
             inputMode={

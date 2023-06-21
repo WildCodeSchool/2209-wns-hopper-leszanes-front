@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import zanelogo from "../../assets/images/zanelogo.png";
 import styles from "./Header.module.scss";
@@ -12,7 +12,11 @@ export const Header = () => {
   return (
     <div>
       <header className={styles.header}>
-        <img src={zanelogo} alt="" className={styles.logo} />
+        <Link to="/">
+          {" "}
+          <img src={zanelogo} alt="" className={styles.logo} />
+        </Link>
+
         <Navbar />
         {user ? (
           <NavLink to="/profile" className={styles.profileButton}>
