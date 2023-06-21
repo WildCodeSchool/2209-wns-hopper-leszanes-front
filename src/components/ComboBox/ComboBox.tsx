@@ -1,6 +1,5 @@
 import { Key } from "react";
 import { InputGroup, InputGroupProps } from "../InputGroup/InputGroup";
-import styles from "./ComboBox.module.scss";
 
 type KeyOfTWhoIsAString<T> = {
   [K in keyof T]: T[K] extends string ? K : never;
@@ -49,6 +48,7 @@ export const ComboBox = <T,>({
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             value={item[dataListValues]}
           >
+            {/* @ts-expect-error dataListItems is a string */}
             {item[dataListItems as string]}
           </option>
         ))}

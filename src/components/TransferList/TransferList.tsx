@@ -203,7 +203,6 @@ export const TransferList = () => {
           description: "Les transferts n'ont pas pu être supprimés",
           variant: "error",
         });
-        return;
       }
     } catch (err) {
       createToast({

@@ -6,13 +6,13 @@ import { Upload, X } from "lucide-react";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
 import { useToast } from "../../contexts/hooks/ToastContext";
-import { createFile } from "../../graphql/createFile";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
 import { UploadFilesResponse } from "../../types/UploadFilesResponse";
 import { UploadResponse } from "../../types/UploadResponse";
 import { UploadFormEvent } from "../../types/UploadFormEvent";
 import { CreateTransferResponse } from "../../types/CreateTransferResponse";
 import { createTransfer } from "../../graphql/createTransfer";
+import { createFile } from "../../graphql/file/createFile";
 
 export const ImportFile = () => {
   const [transferName, setTransferName] = useState<string>("");
@@ -51,7 +51,7 @@ export const ImportFile = () => {
   };
 
   const handleRemoveFile = () => {
-    console.log("delete file");
+    // TODO : remove file from list
   };
 
   const doCreateTransfer = async (name: string, description: string) => {
@@ -137,8 +137,13 @@ export const ImportFile = () => {
           });
         }
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
+        createToast({
+          id: "upload-error",
+          title: "Une erreur est survenue",
+          description: "Erreur lors de l'upload du fichier",
+          variant: "error",
+        });
       })
       .then(() => {
         confetti({

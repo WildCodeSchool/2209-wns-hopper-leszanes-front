@@ -93,7 +93,6 @@ export const TransferElement = ({
           description: "Le transfert n'a pas pu être supprimé",
           variant: "error",
         });
-        return;
       }
     } catch (err) {
       createToast({
@@ -156,7 +155,6 @@ export const TransferElement = ({
           description: "Le transfert n'a pas pu être modifié",
           variant: "error",
         });
-        return;
       }
     } catch (err) {
       createToast({
