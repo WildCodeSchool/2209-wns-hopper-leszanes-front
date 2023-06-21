@@ -28,11 +28,63 @@ main:has(.sendFileContainer) {
       flex-direction: column;
       gap: 20px;
     }
-    input {
-      display: none;
+
+    .uploadSvg {
+      background-color: #14c4db;
+      border-radius: 20px;
+      padding: 5px;
+      margin-right: 10px;
     }
-    label {
+    .inputFileContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .labelImportFile {
       cursor: pointer;
+    }
+    .inputfile {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+      + label {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: solid 2px #9d9d9d;
+      }
+    }
+    // .inputfile + label {
+    //   cursor: pointer;
+    //   display: flex;
+    //   align-items: center;
+    //   margin-top: 15px;
+    //   margin-bottom: 15px;
+    //   padding-bottom: 15px;
+    //   border-bottom: solid 2px #9d9d9d;
+    // }
+    .hoverForRemoveCross:hover {
+      .removeFileSvg {
+        border-radius: 20px;
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+
+    .removeFileSvg {
+      opacity: 0;
+    }
+    .titleRemoveContainer {
+      justify-content: space-between;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
   }
 }

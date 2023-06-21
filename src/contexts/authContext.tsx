@@ -10,7 +10,7 @@ import {
 } from "react";
 import { useQuery } from "@apollo/client";
 import type { User } from "../types/User";
-import { getCurrentUser } from "../graphql/getCurrentUser";
+import { getCurrentUser } from "../graphql/user/getCurrentUser";
 
 type AuthContextData = {
   user: User | null;

@@ -1,0 +1,79 @@
+.transferList {
+  display: flex;
+  flex-direction: column;
+  background-color: #f5f5f5;
+  padding: 20px;
+  gap: 15px;
+}
+
+.transferList__titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+}
+
+.transferList__header__actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+}
+
+.transferList__title {
+  font-size: 2rem;
+  margin-block: 15px;
+  font-weight: 600;
+}
+
+.transferList__close {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 99999px;
+  padding: 15px;
+}
+
+.transferList__header {
+  background: #fff;
+  padding-inline: 25px;
+  padding-block: 15px;
+  border-radius: 35px;
+  border: 2px solid #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+}
+
+.transferList__noResult {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.transferList__select {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  width: max-content;
+}

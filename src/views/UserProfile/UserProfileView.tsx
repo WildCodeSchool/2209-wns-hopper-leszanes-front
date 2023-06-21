@@ -7,9 +7,13 @@ export const UserProfileView = () => {
   const textColor = "#000";
   const completed = 91;
   const setColor = () => {
+    // TODO : fix this
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (completed > 60 && completed < 90) {
       return "#f27800";
     }
+    // TODO : fix this
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (completed >= 90) {
       return "#DF2525";
     }

@@ -1,16 +1,3 @@
-@keyframes loader {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.loader {
-  animation: loader 1s linear infinite;
-}
-
 .loaderLayout {
   position: fixed;
   inset: 0;

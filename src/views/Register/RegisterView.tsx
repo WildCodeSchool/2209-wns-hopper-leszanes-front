@@ -4,9 +4,10 @@ import { useMutation } from "@apollo/client";
 import { useLocation, useNavigate } from "react-router-dom";
 import { InputGroup } from "../../components/InputGroup/InputGroup";
 import styles from "./RegisterView.module.scss";
-import { createUser } from "../../graphql/createUser";
+import { createUser } from "../../graphql/user/createUser";
 import type { UserWithToken } from "../../types/UserWithToken";
 import { useAuth } from "../../contexts/authContext";
+import { Button } from "../../components/Button/Button";
 
 type RegisterFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -114,9 +115,9 @@ export const RegisterView = () => {
             disabled={loading}
             labelProps={{ className: styles.passwordLabel }}
           />
-          <button disabled={loading} type="submit">
-            Sign up
-          </button>
+          <Button disabled={loading} type="submit">
+            S'enregistrer
+          </Button>
         </form>
         {showError && (
           <p>

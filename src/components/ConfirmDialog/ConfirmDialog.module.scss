@@ -1,0 +1,42 @@
+.confirmDialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  backdrop-filter: blur(5px);
+  background: rgba(79, 79, 79, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 999;
+  padding: 30px;
+}
+
+.confirmDialog__content {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
+  min-width: max-content;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.confirmDialog__content h2 {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+@media screen and (min-width: 768px) {
+  .confirmDialog {
+    align-items: center;
+  }
+}
+
+.confirmDialog__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}

@@ -1,88 +1,102 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
 import confetti from "canvas-confetti";
+import { Upload, X } from "lucide-react";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
-import { createFile } from "../../graphql/createFile";
-import { useAuth } from "../../contexts/authContext";
+import { useToast } from "../../contexts/hooks/ToastContext";
 import { ProgressBar } from "../ProgressBar/ProgressBar";
-
-type UploadFormEvent = FormEvent<HTMLFormElement> & {
-  target: HTMLInputElement & {
-    fileName: HTMLInputElement;
-    description: HTMLInputElement;
-    isPrivate: HTMLInputElement;
-  };
-};
-
-type UploadResponse = {
-  createFile: {
-    name: string;
-    fileName: string;
-    description: string;
-    is_private: boolean;
-  };
-};
+import { UploadFilesResponse } from "../../types/UploadFilesResponse";
+import { UploadResponse } from "../../types/UploadResponse";
+import { UploadFormEvent } from "../../types/UploadFormEvent";
+import { CreateTransferResponse } from "../../types/CreateTransferResponse";
+import { createTransfer } from "../../graphql/createTransfer";
+import { createFile } from "../../graphql/file/createFile";
 
 export const ImportFile = () => {
-  const [fileName, setFileName] = useState<string>("");
+  const [transferName, setTransferName] = useState<string>("");
+  const [transferId, setTransferId] = useState<number>();
   const [fileList, setFileList] = useState<FileList>();
-  const [fileType, setFileType] = useState<string>("");
-  const [fileSize, setFileSize] = useState<number>(0);
   const [completed, setCompleted] = useState<number>(0);
-  const { user } = useAuth();
   const files = fileList ? [...fileList] : [];
-  const [uploadDescription, setUploadDescription] = useState<string>("");
+  const [transferDescription, setTransferDescription] = useState<string>("");
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
-  const [doCreateFileMutation, { loading }] =
+  const [doCreateFileMutation, { loading: fileLoading }] =
     useMutation<UploadResponse>(createFile);
+  const { createToast } = useToast();
+  const [doCreateTransferMutation] =
+    useMutation<CreateTransferResponse>(createTransfer);
 
-  useEffect(() => {
-    if (fileList) {
-      if (fileList.length <= 1) {
-        const strTitle = fileList[0].name.split(".");
-        setFileName(strTitle[0]);
-        setFileType(strTitle[1]);
-        setFileSize(fileList[0].size);
-      } else {
-        let descriptionFilesNames = "Contient les fichiers suivants:";
-        Array.from(fileList).forEach((file) => {
-          descriptionFilesNames += `\n-${file.name}`;
-        });
-        setUploadDescription(descriptionFilesNames);
-      }
-    }
-  }, [fileList]);
+  // useEffect(() => {
+  //   if (fileList) {
+  //     if (fileList.length <= 1) {
+  //       const strTitle = fileList[0].name.split(".");
+  //     } else {
+  //       let descriptionFilesNames = "Contient les fichiers suivants:";
+  //       Array.from(fileList).forEach((file) => {
+  //         descriptionFilesNames += `\n-${file.name}`;
+  //       });
+  //       setTransferDescription(descriptionFilesNames);
+  //     }
+  //   }
+  // }, [fileList]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFileList(e.target.files);
+    } else {
+      setFileList(undefined);
     }
   };
 
-  const doCreateFile = async (
-    name: string,
-    description: string,
-    type: string,
-    is_private: boolean,
-    size: number,
-    created_by: number
-  ) => {
+  const handleRemoveFile = () => {
+    // TODO : remove file from list
+  };
+
+  const doCreateTransfer = async (name: string, description: string) => {
+    try {
+      await doCreateTransferMutation({
+        variables: {
+          data: {
+            name,
+            description,
+            isPrivate,
+          },
+        },
+      })
+        .then((res) => {
+          if (res.data) {
+            setTransferId(Number(res.data.createTransfer.id));
+          }
+        })
+        .catch((err) => {
+          throw new Error(JSON.stringify(err));
+        });
+    } catch (err) {
+      throw new Error(JSON.stringify(err));
+    }
+  };
+
+  const doCreateFile = async (name: string, type: string, size: number) => {
     try {
       await doCreateFileMutation({
         variables: {
           data: {
             name,
-            description,
             type,
-            is_private,
             size,
-            created_by,
+            transferId,
           },
         },
       });
     } catch (err) {
+      createToast({
+        id: "create-file-error",
+        title: "Une erreur est survenue",
+        description: "Erreur lors de la création du fichier",
+        variant: "error",
+      });
       throw new Error(JSON.stringify(err));
     }
   };
@@ -104,26 +118,32 @@ export const ImportFile = () => {
     files.forEach((file) => {
       formData.append(`files`, file, file.name);
     });
+    doCreateTransfer(transferName, transferDescription);
     axios
-      .post("http://localhost:4000/files/upload", formData, {
-        onUploadProgress,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((res) => {
-        if (res.data) {
-          if (user && fileName && uploadDescription && fileType) {
-            doCreateFile(
-              fileName,
-              uploadDescription,
-              fileType,
-              isPrivate,
-              fileSize,
-              Number(user.id)
-            );
-          }
+      .post<{ filesUpload: UploadFilesResponse[] }>(
+        "http://localhost:4000/files/upload",
+        formData,
+        {
+          onUploadProgress,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
+      )
+      .then((res) => {
+        if (res.data.filesUpload.length > 0) {
+          res.data.filesUpload.forEach((file) => {
+            doCreateFile(file.filename, file.mimetype, file.size);
+          });
+        }
+      })
+      .catch(() => {
+        createToast({
+          id: "upload-error",
+          title: "Une erreur est survenue",
+          description: "Erreur lors de l'upload du fichier",
+          variant: "error",
+        });
       })
       .then(() => {
         confetti({
@@ -132,42 +152,70 @@ export const ImportFile = () => {
           origin: { y: 0.6 },
         });
       })
-      .catch((err) => console.error(err));
+      .catch(() =>
+        createToast({
+          id: "create-file-error-data",
+          title: "Une erreur est survenue",
+          description: "Erreur lors de la création du fichier",
+          variant: "error",
+        })
+      );
   };
-
+  const generateKey = (pre: string) => {
+    return `${pre}_${new Date().getTime()}`;
+  };
   return (
     <div className={styles.sendFileContainer}>
       <div>
         <h1>Importer un fichier</h1>
+        <div className={styles.inputFileContainer}>
+          {fileList &&
+            files.map((file, index) => (
+              <div
+                key={generateKey(file.name)}
+                className={styles.hoverForRemoveCross}
+              >
+                <div className={styles.titleRemoveContainer}>
+                  <p>{file.name}</p>
+                  <X
+                    size="20"
+                    color="#df2525"
+                    className={styles.removeFileSvg}
+                    onClick={handleRemoveFile}
+                    id={index}
+                  />
+                </div>
+                <p>
+                  {file.size} · {file.type.split("/").pop()}
+                </p>
+              </div>
+            ))}
 
-        <InputGroup
-          label="Charger un fichier"
-          name="inputTag"
-          onChange={(e) => {
-            handleFileChange(e as ChangeEvent<HTMLInputElement>);
-          }}
-          type="file"
-          disabled={loading}
-          multiple
-          placeholder=""
-          inputMode="none"
-        />
+          <label htmlFor="file" className={styles.labelImportFile}>
+            <Upload size="25" className={styles.uploadSvg} />
+            Chargez vos fichiers
+            <input
+              type="file"
+              name="file"
+              id="file"
+              className={styles.inputfile}
+              multiple
+              onChange={handleFileChange}
+            />
+          </label>
+        </div>
 
         <form onSubmit={handleUploadSubmit}>
-          {/* <InputGroup
-            label="Nom du fichier"
-            name="fileName"
-            type="text"
-            placeholder="Mon fichier"
+          <InputGroup
             inputMode="text"
-            disabled={loading}
-            value={userFileName}
-            onChange={(e) => {
-              setUserFileName(
-                (e as ChangeEvent<HTMLInputElement>).target.value
-              );
-            }}
-          /> */}
+            label="Titre du transfer"
+            name="transferName"
+            type="text"
+            placeholder="Dossier photos"
+            disabled={fileLoading}
+            value={transferName}
+            onChange={(e) => setTransferName(e.target.value)}
+          />
           <InputGroup
             as="textarea"
             label="Description"
@@ -175,10 +223,10 @@ export const ImportFile = () => {
             type="textarea"
             placeholder="Description"
             inputMode="text"
-            disabled={loading}
-            value={uploadDescription}
+            disabled={fileLoading}
+            value={transferDescription}
             onChange={(e) =>
-              setUploadDescription(
+              setTransferDescription(
                 (e as ChangeEvent<HTMLTextAreaElement>).target.value
               )
             }
@@ -200,11 +248,11 @@ export const ImportFile = () => {
               type="text"
               inputMode="email"
               placeholder="myemail@email.com"
-              disabled={loading}
+              disabled={fileLoading}
             />
           )}
 
-          <button disabled={loading} type="submit">
+          <button disabled={fileLoading} type="submit">
             {isPrivate ? "Envoyer" : "Obtenir le lien"}
           </button>
           <ProgressBar
@@ -214,7 +262,7 @@ export const ImportFile = () => {
             fullText="Terminé"
           />
         </form>
-        {loading && <p>Chargement...</p>}
+        {fileLoading && <p>Chargement...</p>}
       </div>
     </div>
   );
