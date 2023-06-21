@@ -1,35 +1,3 @@
-<<<<<<< Updated upstream
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import axios from "axios";
-import { useMutation } from "@apollo/client";
-import { InputGroup } from "../InputGroup/InputGroup";
-import styles from "./ImportFile.module.scss";
-import { createFile } from "../../graphql/createFile";
-import { useAuth } from "../../contexts/authContext";
-
-type UploadFormEvent = FormEvent<HTMLFormElement> & {
-  target: HTMLInputElement & {
-    fileName: HTMLInputElement;
-    description: HTMLInputElement;
-    isPrivate: HTMLInputElement;
-  };
-};
-
-type UploadResponse = {
-  createFile: {
-    name: string;
-    fileName: string;
-    description: string;
-    is_private: boolean;
-  };
-};
-
-export const ImportFile = () => {
-  const [fileList, setFileList] = useState<FileList>();
-  const [userFileName, setUserFileName] = useState<string>("");
-  const [sendEmail, setSendEmail] = useState<string>("");
-  const { user } = useAuth();
-=======
 import { ChangeEvent, useState } from "react";
 import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
@@ -50,7 +18,6 @@ export const ImportFile = () => {
   const [transferId, setTransferId] = useState<number>();
   const [fileList, setFileList] = useState<FileList>();
   const [completed, setCompleted] = useState<number>(0);
->>>>>>> Stashed changes
   const files = fileList ? [...fileList] : [];
   const [transferDescription, setTransferDescription] = useState<string>("");
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
@@ -59,22 +26,6 @@ export const ImportFile = () => {
   const [doCreateTransferMutation] =
     useMutation<CreateTransferResponse>(createTransfer);
 
-<<<<<<< Updated upstream
-  useEffect(() => {
-    if (fileList) {
-      if (fileList.length <= 1) {
-        const strTitle = fileList[0].name.split(".");
-        setUserFileName(strTitle[0]);
-      } else {
-        let descriptionFilesNames = "Contient les fichiers suivants:";
-        Array.from(fileList).forEach((file) => {
-          descriptionFilesNames += `\n-${file.name}`;
-        });
-        setUploadDescription(descriptionFilesNames);
-      }
-    }
-  }, [fileList]);
-=======
   // useEffect(() => {
   //   if (fileList) {
   //     if (fileList.length <= 1) {
@@ -88,7 +39,6 @@ export const ImportFile = () => {
   //     }
   //   }
   // }, [fileList]);
->>>>>>> Stashed changes
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -97,17 +47,6 @@ export const ImportFile = () => {
       setFileList(undefined);
     }
   };
-<<<<<<< Updated upstream
-  const doCreateFile = async (
-    name: string,
-    fileName: string,
-    description: string,
-    type: string,
-    is_private: boolean,
-    size: number,
-    created_by: number
-  ) => {
-=======
 
   const handleRemoveFile = () => {
     console.log("delete file");
@@ -138,17 +77,11 @@ export const ImportFile = () => {
   };
 
   const doCreateFile = async (name: string, type: string, size: number) => {
->>>>>>> Stashed changes
     try {
       await doCreateFileMutation({
         variables: {
           data: {
             name,
-<<<<<<< Updated upstream
-            fileName,
-            description,
-=======
->>>>>>> Stashed changes
             type,
             size,
             transferId,
@@ -169,24 +102,6 @@ export const ImportFile = () => {
     files.forEach((file) => {
       formData.append(`files`, file, file.name);
     });
-<<<<<<< Updated upstream
-    console.log(formData.values());
-    axios
-      .post("http://localhost:4000/files/upload", formData)
-      .then((res) => {
-        if (res.data) {
-          if (user && userFileName && uploadDescription) {
-            doCreateFile(
-              userFileName,
-              res.data.data.fileName,
-              uploadDescription,
-              res.data.data.fileType,
-              isPrivate,
-              res.data.data.size,
-              Number(user.id)
-            );
-          }
-=======
     doCreateTransfer(transferName, transferDescription);
     axios
       .post<{ filesUpload: UploadFilesResponse[] }>(
@@ -197,7 +112,6 @@ export const ImportFile = () => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
->>>>>>> Stashed changes
         }
       )
       .then((res) => {
@@ -258,20 +172,6 @@ export const ImportFile = () => {
 
         <form onSubmit={handleUploadSubmit}>
           <InputGroup
-<<<<<<< Updated upstream
-            label="Nom du fichier"
-            name="fileName"
-            type="text"
-            placeholder="Mon fichier"
-            inputMode="text"
-            disabled={loading}
-            value={userFileName}
-            onChange={(e) => {
-              setUserFileName(
-                (e as ChangeEvent<HTMLInputElement>).target.value
-              );
-            }}
-=======
             inputMode="text"
             label="Titre du transfer"
             name="transferName"
@@ -280,7 +180,6 @@ export const ImportFile = () => {
             disabled={fileLoading}
             value={transferName}
             onChange={(e) => setTransferName(e.target.value)}
->>>>>>> Stashed changes
           />
           <InputGroup
             as="textarea"
@@ -314,16 +213,7 @@ export const ImportFile = () => {
               type="text"
               inputMode="email"
               placeholder="myemail@email.com"
-<<<<<<< Updated upstream
-              disabled={loading}
-              onChange={(e) =>
-                setSendEmail(
-                  (e as ChangeEvent<HTMLTextAreaElement>).target.value
-                )
-              }
-=======
               disabled={fileLoading}
->>>>>>> Stashed changes
             />
           )}
 
