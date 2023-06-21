@@ -174,11 +174,11 @@ export const TransferElement = ({
     updateTransfer(formData);
   };
 
-  const handleUpdateTransferUsers = (users: User[]) => {
+  const handleUpdateTransferUsers = async (users: User[]) => {
     const data = {
       userIds: users.map((u) => u.id),
     };
-    updateTransfer(data);
+    await updateTransfer(data);
   };
 
   if (isDeleteLoading) {
@@ -320,6 +320,11 @@ export const TransferElement = ({
         />
       </Dialog>
       <Dialog
+        style={{
+          width: "636px",
+          minHeight: "380px",
+          maxWidth: "100%",
+        }}
         title="Partagé avec"
         onOpenChange={setIsUsersEditDialogOpen}
         open={isUsersEditDialogOpen}

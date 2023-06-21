@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Frown, Search, X } from "lucide-react";
 import { getCurrentUserTransfers } from "../../graphql/transfer/getCurrentUserTransfers";
 import { Transfer } from "../../types/Transfer";
@@ -12,6 +12,7 @@ import { bulkDeleteCurrentUserTransfers } from "../../graphql/transfer/bulkDelet
 import { useToast } from "../../contexts/hooks/ToastContext";
 import { ConfirmDialog } from "../ConfirmDialog/ConfirmDialog";
 import { ComboBox } from "../ComboBox/ComboBox";
+import { Select } from "../Select/Select";
 
 type GetCurrentUser = {
   getCurrentUserTransfers: Transfer[] | null;
@@ -38,6 +39,42 @@ export const TransferList = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
+  const sortByItems = useMemo(
+    () => [
+      {
+        id: "createdAt",
+        itemContainer: { value: "createdAt" },
+        itemLabel: { children: "Date de création" },
+      },
+      {
+        id: "updatedAt",
+        itemContainer: { value: "updatedAt" },
+        itemLabel: { children: "Date de modification" },
+      },
+      {
+        id: "name",
+        itemContainer: { value: "name" },
+        itemLabel: { children: "Nom" },
+      },
+    ],
+    []
+  );
+
+  const sortOrderItems = useMemo(
+    () => [
+      {
+        id: "asc",
+        itemContainer: { value: "asc" },
+        itemLabel: { children: "Croissant" },
+      },
+      {
+        id: "desc",
+        itemContainer: { value: "desc" },
+        itemLabel: { children: "Décroissant" },
+      },
+    ],
+    []
+  );
   const sortTransfers = useCallback(
     (
       sort: "name" | "createdAt" | "updatedAt",
@@ -96,11 +133,11 @@ export const TransferList = () => {
     []
   );
 
-  useEffect(() => {
+  useMemo(() => {
     sortTransfers(sortBy, sortOrder);
   }, [sortBy, sortOrder, sortTransfers]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (data?.getCurrentUserTransfers) {
       setInitialTransfers(data.getCurrentUserTransfers);
       setTransfers(data.getCurrentUserTransfers);
@@ -121,7 +158,7 @@ export const TransferList = () => {
     [initialTransfers]
   );
 
-  useEffect(() => {
+  useMemo(() => {
     searchTransfers(search);
   }, [search, searchTransfers]);
 
@@ -192,44 +229,9 @@ export const TransferList = () => {
   if (error) return <p>{error.message}</p>;
 
   return (
-    <>
-      <div className={styles.transferList__header}>
-        <InputGroup
-          type="checkbox"
-          name="selectAll"
-          label="Tout sélectionner"
-          onChange={handleSelectAll}
-          checked={
-            selectedTransfers.length === transfers.length &&
-            transfers.length > 0
-          }
-          placeholder=""
-          inputMode="none"
-        />
-
-        <select
-          name="sortBy"
-          id="sortBy"
-          value={sortBy}
-          onChange={(e) =>
-            setSortBy(e.target.value as "name" | "createdAt" | "updatedAt")
-          }
-        >
-          <option value="name">Nom</option>
-          <option value="createdAt">Date de création</option>
-          <option value="updatedAt">Date de modification</option>
-        </select>
-
-        <select
-          name="sortOrder"
-          id="sortOrder"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-        >
-          <option value="asc">Ascendant</option>
-          <option value="desc">Descendant</option>
-        </select>
-
+    <div className={styles.transferList}>
+      <div className={styles.transferList__titleContainer}>
+        <h1 className={styles.transferList__title}>Mes derniers transferts</h1>
         <ComboBox
           dataList={transfers}
           dataListItems="name"
@@ -241,8 +243,54 @@ export const TransferList = () => {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Rechercher"
           icon={<Search width={20} height={20} />}
-          width={400}
+          width="max-content"
         />
+      </div>
+      <div className={styles.transferList__header}>
+        <InputGroup
+          width="max-content"
+          type="checkbox"
+          name="selectAll"
+          label="Tout sélectionner"
+          onChange={handleSelectAll}
+          checked={
+            selectedTransfers.length === transfers.length &&
+            transfers.length > 0
+          }
+          placeholder=""
+          inputMode="none"
+        />
+        <div className={styles.transferList__header__actions}>
+          <Select
+            className={styles.transferList__select}
+            displayLabel="Trier par"
+            label={`${
+              sortByItems.find((item) => item.itemContainer.value === sortBy)
+                ?.itemLabel.children ?? "Trier par"
+            }`}
+            name="sortBy"
+            value={sortBy}
+            onValueChange={(e) => {
+              setSortBy(e as "name" | "createdAt" | "updatedAt");
+            }}
+            items={sortByItems}
+          />
+          <Select
+            className={styles.transferList__select}
+            displayLabel="Ordre"
+            label={`${
+              sortOrderItems.find(
+                (item) => item.itemContainer.value === sortOrder
+              )?.itemLabel.children ?? "Ordre"
+            }`}
+            name="sortOrder"
+            value={sortOrder}
+            onValueChange={(e) => {
+              setSortOrder(e as "asc" | "desc");
+            }}
+            items={sortOrderItems}
+          />
+        </div>
       </div>
       <ul className={styles.transferList}>
         {transfers.map((transfer) => (
@@ -282,6 +330,6 @@ export const TransferList = () => {
       >
         <p>Êtes-vous sûr de vouloir supprimer ces transferts ?</p>
       </ConfirmDialog>
-    </>
+    </div>
   );
 };
