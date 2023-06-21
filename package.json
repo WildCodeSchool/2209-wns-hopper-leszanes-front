@@ -13,16 +13,19 @@
     "coverage": "pnpm build && vitest run --coverage",
     "test": "pnpm build && vitest",
     "test:ui": "pnpm build && vitest --ui",
-    "test:ci": "pnpm build && vitest run"
+    "test:ci": "npm run build && vitest run"
   },
   "dependencies": {
     "@apollo/client": "3.x",
     "@radix-ui/react-dropdown-menu": "^2.0.2",
+    "@types/react-lottie": "^1.2.6",
     "axios": "^1.2.1",
     "canvas-confetti": "^1.6.0",
     "classnames-generics": "^1.0.8",
     "graphql": "15.x",
+    "lottie-react": "^2.4.0",
     "lucide-react": "0.105.0-alpha.4",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.5.0"

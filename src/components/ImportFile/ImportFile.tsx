@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react";
 import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
 import confetti from "canvas-confetti";
-import { CloudOff, Upload, X } from "lucide-react";
+import { Upload, X } from "lucide-react";
 import { InputGroup } from "../InputGroup/InputGroup";
 import styles from "./ImportFile.module.scss";
 import { createFile } from "../../graphql/createFile";
@@ -89,7 +89,15 @@ export const ImportFile = () => {
         },
       });
     } catch (err) {
-      console.error(err);
+      throw new Error(JSON.stringify(err));
+    }
+  };
+
+  const onUploadProgress = (progressEvent: AxiosProgressEvent) => {
+    const { loaded, total } = progressEvent;
+    if (total !== undefined) {
+      const percent = Math.floor((loaded * 100) / total);
+      setCompleted(percent);
     }
   };
 
@@ -123,6 +131,13 @@ export const ImportFile = () => {
       })
       .catch((err) => {
         console.error(err);
+      })
+      .then(() => {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
       })
       .catch((err) => console.error(err));
   };
@@ -220,6 +235,12 @@ export const ImportFile = () => {
           <button disabled={fileLoading} type="submit">
             {isPrivate ? "Envoyer" : "Obtenir le lien"}
           </button>
+          <ProgressBar
+            bgcolor="#b2e4eb"
+            completed={completed}
+            textColor="#333"
+            fullText="Terminé"
+          />
         </form>
         {fileLoading && <p>Chargement...</p>}
       </div>
