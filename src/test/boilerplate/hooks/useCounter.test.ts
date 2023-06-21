@@ -3,9 +3,9 @@ import { describe, it, expect } from "vitest";
 import { useCounter } from "./useCounter";
 
 describe("useCounter", () => {
-  it.skip("should increment counter", async () => {
+  it.skip("should increment counter", () => {
     const { result } = renderHook(() => useCounter());
-    await act(() => {
+    act(() => {
       result.current.increment();
     });
     expect(result.current.count).toBe(1);
