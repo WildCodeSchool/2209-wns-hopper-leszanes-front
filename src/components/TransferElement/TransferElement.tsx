@@ -27,6 +27,8 @@ import { getFormData } from "../../utils/forms";
 import { updateCurrentUserTransfer } from "../../graphql/transfer/updateCurrentUserTransfer";
 import { EditUsersForm } from "../../views/Transfers/forms/EditUsersForm/EditUsersForm";
 import { User } from "../../types/User";
+import { EditFilesForm } from "../../views/Transfers/forms/EditFilesForm/EditFilesForm";
+import { File } from "../../types/File";
 
 export type TransferElementProps = {
   transferData: Transfer;
@@ -58,6 +60,7 @@ export const TransferElement = ({
   }>(updateCurrentUserTransfer);
   const { user } = useAuth();
   const [isUsersEditDialogOpen, setIsUsersEditDialogOpen] = useState(false);
+  const [isFilesEditDialogOpen, setIsFilesEditDialogOpen] = useState(false);
 
   const handleDelete = (e: MouseEvent) => {
     e.preventDefault();
@@ -179,6 +182,13 @@ export const TransferElement = ({
     await updateTransfer(data);
   };
 
+  const handleUpdateTransferFiles = async (files: File[]) => {
+    const data = {
+      fileIds: files.map((u) => u.id),
+    };
+    await updateTransfer(data);
+  };
+
   if (isDeleteLoading) {
     return <LoadingLayout />;
   }
@@ -247,7 +257,10 @@ export const TransferElement = ({
                         <Users width={20} height={20} />
                       </ToolTip>
                     </button>
-                    <button type="button">
+                    <button
+                      onClick={() => setIsFilesEditDialogOpen(true)}
+                      type="button"
+                    >
                       <ToolTip content="Gérer les fichiers">
                         <Files width={20} height={20} />
                       </ToolTip>
@@ -331,6 +344,22 @@ export const TransferElement = ({
           transferId={transfer.id}
           isLoading={isUpdateLoading}
           updateUsersTransfer={handleUpdateTransferUsers}
+        />
+      </Dialog>
+      <Dialog
+        style={{
+          width: "750px",
+          minHeight: "200px",
+          maxWidth: "100%",
+        }}
+        title="Fichiers partagés"
+        onOpenChange={setIsFilesEditDialogOpen}
+        open={isFilesEditDialogOpen}
+      >
+        <EditFilesForm
+          transferId={transfer.id}
+          isLoading={isUpdateLoading}
+          updateFilesTransfer={handleUpdateTransferFiles}
         />
       </Dialog>
     </>

@@ -1,0 +1,128 @@
+.editFilesForm {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editFilesForm__loader {
+  position: absolute;
+  background: hsla(0, 0%, 100%, 0.5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.editFilesForm__file {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background: hsla(0, 0%, 82%, 0.5);
+    border-radius: 5px;
+  }
+}
+
+.editFilesForm__files {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.uploadSvg {
+  background-color: $accentuatedMainColor;
+  border-radius: 20px;
+  padding: 5px;
+  margin-right: 10px;
+}
+.inputFileContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.labelImportFile {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+  + label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: solid 2px #9d9d9d;
+  }
+}
+.hoverForRemoveCross:hover {
+  .removeFileSvg {
+    border-radius: 20px;
+    opacity: 1;
+    cursor: pointer;
+  }
+}
+
+.removeFileSvg {
+  opacity: 0;
+}
+.titleRemoveContainer {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filesList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.editFilesForm__upload {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  max-width: 500px;
+  margin-inline: auto;
+
+  button {
+    padding: 7px 15px;
+    border-radius: 7px;
+    background-color: $accentuatedMainColor;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: $mainColor;
+    }
+  }
+}
