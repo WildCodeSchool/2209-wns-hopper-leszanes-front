@@ -14,8 +14,8 @@ import { UploadResponse } from "../../types/UploadResponse";
 import { UploadFormEvent } from "../../types/UploadFormEvent";
 
 export const ImportFile = () => {
+  let transferId: number;
   const [transferName, setTransferName] = useState<string>("");
-  const [transferId, setTransferId] = useState<number>();
   const [fileList, setFileList] = useState<FileList>();
   const [completed, setCompleted] = useState<number>(0);
   const files = fileList ? [...fileList] : [];
@@ -65,7 +65,7 @@ export const ImportFile = () => {
       })
         .then((res) => {
           if (res.data) {
-            setTransferId(Number(res.data.createTransfer.id));
+            transferId = Number(res.data.createTransfer.id);
           }
         })
         .catch((err) => {
@@ -76,12 +76,19 @@ export const ImportFile = () => {
     }
   };
 
-  const doCreateFile = async (name: string, type: string, size: number) => {
+  const doCreateFile = async (
+    name: string,
+    fileName: string,
+    type: string,
+    size: number
+  ) => {
     try {
+      console.log(`Transfert id : ${transferId ?? "Vide"}`);
       await doCreateFileMutation({
         variables: {
           data: {
             name,
+            fileName,
             type,
             size,
             transferId,
@@ -125,7 +132,12 @@ export const ImportFile = () => {
       .then((res) => {
         if (res.data.filesUpload.length > 0) {
           res.data.filesUpload.forEach((file) => {
-            doCreateFile(file.filename, file.mimetype, file.size);
+            doCreateFile(
+              file.filename,
+              file.originalname,
+              file.mimetype,
+              file.size
+            );
           });
         }
       })
