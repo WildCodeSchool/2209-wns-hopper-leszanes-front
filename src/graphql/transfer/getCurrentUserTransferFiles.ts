@@ -5,6 +5,7 @@ export const getCurrentUserTransferFiles = gql`
     getCurrentUserTransferFiles(id: $getCurrentUserTransferFilesId) {
       id
       name
+      fileName
       size
       type
       createdAt

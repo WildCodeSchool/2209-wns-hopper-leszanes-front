@@ -5,11 +5,15 @@ import { useToast } from "../contexts/hooks/ToastContext";
 export const useFiles = () => {
   const { createToast } = useToast();
 
-  const download = async (fileNames: string | string[], fileList: File[]) => {
-    let fileType = "zip";
-    let fileName = "files";
+  const download = async (
+    filesData:
+      | { fileName: string; name: string }
+      | { fileName: string; name: string }[],
+    fileList: File[]
+  ) => {
+    let name = "files.zip";
 
-    if (Array.isArray(fileNames) && fileNames.length === 0) {
+    if (Array.isArray(filesData) && filesData.length === 0) {
       // eslint-disable-next-line no-console
       createToast({
         id: "download-error",
@@ -24,11 +28,10 @@ export const useFiles = () => {
       throw new Error("File list is empty");
     }
 
-    if (!Array.isArray(fileNames)) {
+    if (!Array.isArray(filesData)) {
       fileList.forEach((file) => {
-        if (file.name === fileNames) {
-          [, fileType] = file.type.split("/");
-          fileName = file.name;
+        if (file.fileName === filesData.fileName) {
+          name = file.name;
         }
       });
     }
@@ -37,13 +40,13 @@ export const useFiles = () => {
       const response = await axios.get("http://localhost:4000/files/download", {
         responseType: "arraybuffer",
         params: {
-          fileNames,
+          filesData,
         },
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${fileName}.${fileType}`);
+      link.setAttribute("download", name);
       document.body.appendChild(link);
       link.click();
     } catch (error) {

@@ -33,21 +33,40 @@ export const ShowTransferFiles = forwardRef(
     useMemo(() => {
       initualLoadingRef.current = true;
     }, []);
-    const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+    const [selectedFiles, setSelectedFiles] = useState<
+      { fileName: string; name: string }[]
+    >([]);
 
     const handleSelectAll = () => {
       if (selectedFiles.length === transferFiles.length) {
         setSelectedFiles([]);
       } else {
-        setSelectedFiles(transferFiles.map((file) => file.name));
+        setSelectedFiles(
+          transferFiles.map((file) => {
+            return {
+              fileName: file.fileName,
+              name: file.name,
+            };
+          })
+        );
       }
     };
 
     const handleOnSelectChange = (fileName: string) => {
-      if (selectedFiles.includes(fileName)) {
-        setSelectedFiles((prev) => prev.filter((fn) => fn !== fileName));
+      if (selectedFiles.find((fn) => fn.fileName === fileName)) {
+        setSelectedFiles((prev) =>
+          prev.filter((fn) => fn.fileName !== fileName)
+        );
       } else {
-        setSelectedFiles((prev) => [...prev, fileName]);
+        const file = transferFiles.find((fn) => fn.fileName === fileName);
+        if (!file) return;
+        setSelectedFiles((prev) => [
+          ...prev,
+          {
+            fileName: file.fileName,
+            name: file.name,
+          },
+        ]);
       }
     };
 
@@ -98,23 +117,32 @@ export const ShowTransferFiles = forwardRef(
           {transferFiles.length > 0 ? (
             transferFiles.map((file) => (
               <div key={file.id} className={styles.showTransferFiles__file}>
-                <div>
+                <div className={styles.showTransferFiles__file__header}>
                   <InputGroup
                     width="max-content"
                     type="checkbox"
                     name={`transfer-file-${file.id}`}
                     label={file.name}
                     onChange={() => {
-                      handleOnSelectChange(file.name);
+                      handleOnSelectChange(file.fileName);
                     }}
-                    checked={selectedFiles.includes(file.name)}
+                    checked={
+                      selectedFiles.find(
+                        (fn) => fn.fileName === file.fileName
+                      ) !== undefined
+                    }
                     placeholder=""
                     inputMode="none"
                   />
                   <Button
                     variant="muted"
                     icon={<Download width={15} height={15} />}
-                    onClick={() => download(file.name, transferFiles)}
+                    onClick={() =>
+                      download(
+                        { fileName: file.fileName, name: file.name },
+                        transferFiles
+                      )
+                    }
                   />
                 </div>
                 <p>

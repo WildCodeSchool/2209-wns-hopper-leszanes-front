@@ -111,13 +111,19 @@ export const EditFilesForm = forwardRef(
       }
     };
 
-    const doCreateFile = async (name: string, type: string, size: number) => {
+    const doCreateFile = async (
+      name: string,
+      fileName: string,
+      type: string,
+      size: number
+    ) => {
       const transferIdNumber = Number(transferId);
       try {
         await doCreateFileMutation({
           variables: {
             data: {
               name,
+              fileName,
               type,
               size,
               transferId: transferIdNumber,
@@ -161,7 +167,12 @@ export const EditFilesForm = forwardRef(
         .then((res) => {
           if (res.data.filesUpload.length > 0) {
             res.data.filesUpload.forEach((file) => {
-              doCreateFile(file.filename, file.mimetype, file.size);
+              doCreateFile(
+                file.originalname,
+                file.filename,
+                file.mimetype,
+                file.size
+              );
             });
           }
         })
@@ -243,9 +254,7 @@ export const EditFilesForm = forwardRef(
                     id={index}
                   />
                 </div>
-                <p>
-                  {humanFileSize(file.size)} - {file.type.split("/").pop()}
-                </p>
+                <p>{humanFileSize(file.size)}</p>
               </div>
             ))}
         </div>

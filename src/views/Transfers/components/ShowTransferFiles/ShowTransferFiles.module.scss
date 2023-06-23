@@ -17,3 +17,14 @@
     background: $mainColor;
   }
 }
+
+.showTransferFiles__file__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+
+  & button {
+    background: $mainColor;
+  }
+}
