@@ -1,0 +1,11 @@
+.editTransferForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editTransferForm__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

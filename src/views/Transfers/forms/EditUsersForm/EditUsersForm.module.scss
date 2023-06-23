@@ -1,0 +1,45 @@
+.editUsersForm {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editUsersForm__loader {
+  position: absolute;
+  background: hsla(0, 0%, 100%, 0.5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.editUsersForm__addContact {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.editUsersForm__contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  & button {
+    padding: 5px;
+  }
+}
+
+.editUsersForm__noContacts {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  padding-inline: 10px;
+  padding-block: 7px;
+  background: hsla(0, 0%, 82%, 0.5);
+  border-radius: 5px;
+}

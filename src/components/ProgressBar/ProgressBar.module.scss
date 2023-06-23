@@ -1,0 +1,22 @@
+.containerStyles {
+  height: 20px;
+  width: 100%;
+  background-color: #e0e0de;
+  border-radius: 50px;
+  margin-block: 15px;
+  display: block;
+  position: relative;
+}
+.fillerStyles {
+  display: block;
+  border-radius: inherit;
+  transition: width 1s ease-in-out;
+  height: 100%;
+}
+.labelStyles {
+  font-weight: bold;
+  position: absolute;
+  font-size: 0.85rem;
+  left: 50%;
+  transform: translateX(-50%);
+}

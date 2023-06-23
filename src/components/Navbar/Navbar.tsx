@@ -13,9 +13,9 @@ export const Navbar = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/files" data-testid="files">
+          <NavLink to="/transfers" data-testid="transfers">
             <Folders size="30" />
-            <span data-test-id="Fichiers">Fichiers</span>
+            <span data-test-id="Transfers">Transferts</span>
           </NavLink>
         </li>
         <li>

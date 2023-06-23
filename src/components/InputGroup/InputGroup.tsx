@@ -23,7 +23,7 @@ type LabelProps = Omit<LabelHTMLAttributes<HTMLLabelElement>, "htmlFor">;
 
 type Tag = Pick<JSX.IntrinsicElements, "input" | "textarea" | "select">;
 
-type InputGroupProps = {
+export type InputGroupProps = {
   label: string;
   type: HTMLInputTypeAttribute;
   name: string;
@@ -45,6 +45,10 @@ type InputGroupProps = {
   inputMode: HTMLAttributes<HTMLInputElement>["inputMode"];
   autoComplete?: string;
   multiple?: boolean;
+  defaultValue?: string;
+  required?: boolean;
+  iconPosition?: "left" | "right";
+  width?: React.CSSProperties["width"];
 };
 
 export const InputGroup = ({
@@ -64,14 +68,28 @@ export const InputGroup = ({
   inputMode,
   autoComplete,
   multiple,
+  defaultValue,
+  required,
+  iconPosition,
+  width,
 }: InputGroupProps) => {
   const Tag = as ?? "input";
+  let computedClassName = styles.inputFieldContainer;
+  if (icon) {
+    if (!iconPosition || iconPosition === "left") {
+      computedClassName = `${computedClassName} ${styles.inputFieldContainer__iconLeft}`;
+    }
+    if (iconPosition === "right") {
+      computedClassName = `${computedClassName} ${styles.inputFieldContainer__iconRight}`;
+    }
+  }
+
   return (
-    <div className={styles.inputGroup}>
+    <div className={styles.inputGroup} style={{ width }}>
       <label htmlFor={name} {...labelProps}>
         <span>{label}</span>
-        <div className={styles.inputFieldContainer}>
-          {/* @ts-expect-error */}
+        <div className={computedClassName}>
+          {/* @ts-expect-error should throw an error if the type does not accept the prop */}
           <Tag
             autoComplete={autoComplete}
             inputMode={
@@ -87,6 +105,8 @@ export const InputGroup = ({
             checked={type === "checkbox" ? checked : undefined}
             onChange={onChange}
             multiple={type === "file" ? multiple : undefined}
+            defaultValue={defaultValue}
+            required={required}
           />
           {icon}
         </div>
