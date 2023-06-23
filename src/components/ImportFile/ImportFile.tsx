@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
 import confetti from "canvas-confetti";
@@ -15,43 +15,26 @@ import { createTransfer } from "../../graphql/createTransfer";
 import { createFile } from "../../graphql/file/createFile";
 
 export const ImportFile = () => {
+  let transferId: number;
   const [transferName, setTransferName] = useState<string>("");
-  const [transferId, setTransferId] = useState<number>();
-  const [fileList, setFileList] = useState<FileList>();
   const [completed, setCompleted] = useState<number>(0);
-  const files = fileList ? [...fileList] : [];
+  const [files, setFiles] = useState<File[]>([]);
   const [transferDescription, setTransferDescription] = useState<string>("");
-  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [isPrivate, setIsPrivate] = useState<boolean>(true);
   const [doCreateFileMutation, { loading: fileLoading }] =
     useMutation<UploadResponse>(createFile);
   const { createToast } = useToast();
   const [doCreateTransferMutation] =
     useMutation<CreateTransferResponse>(createTransfer);
 
-  // useEffect(() => {
-  //   if (fileList) {
-  //     if (fileList.length <= 1) {
-  //       const strTitle = fileList[0].name.split(".");
-  //     } else {
-  //       let descriptionFilesNames = "Contient les fichiers suivants:";
-  //       Array.from(fileList).forEach((file) => {
-  //         descriptionFilesNames += `\n-${file.name}`;
-  //       });
-  //       setTransferDescription(descriptionFilesNames);
-  //     }
-  //   }
-  // }, [fileList]);
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setFileList(e.target.files);
-    } else {
-      setFileList(undefined);
+      setFiles(Array.from(e.target.files));
     }
   };
 
-  const handleRemoveFile = () => {
-    // TODO : remove file from list
+  const handleRemoveFile = (currentFile: File) => {
+    setFiles(files.filter((file) => file !== currentFile));
   };
 
   const doCreateTransfer = async (name: string, description: string) => {
@@ -67,7 +50,7 @@ export const ImportFile = () => {
       })
         .then((res) => {
           if (res.data) {
-            setTransferId(Number(res.data.createTransfer.id));
+            transferId = Number(res.data.createTransfer.id);
           }
         })
         .catch((err) => {
@@ -78,12 +61,18 @@ export const ImportFile = () => {
     }
   };
 
-  const doCreateFile = async (name: string, type: string, size: number) => {
+  const doCreateFile = async (
+    name: string,
+    fileName: string,
+    type: string,
+    size: number
+  ) => {
     try {
       await doCreateFileMutation({
         variables: {
           data: {
             name,
+            fileName,
             type,
             size,
             transferId,
@@ -111,7 +100,7 @@ export const ImportFile = () => {
 
   const handleUploadSubmit = (e: UploadFormEvent) => {
     e.preventDefault();
-    if (!fileList) {
+    if (files.length <= 0) {
       return;
     }
     const formData = new FormData();
@@ -133,7 +122,12 @@ export const ImportFile = () => {
       .then((res) => {
         if (res.data.filesUpload.length > 0) {
           res.data.filesUpload.forEach((file) => {
-            doCreateFile(file.filename, file.mimetype, file.size);
+            doCreateFile(
+              file.filename,
+              file.originalname,
+              file.mimetype,
+              file.size
+            );
           });
         }
       })
@@ -169,27 +163,25 @@ export const ImportFile = () => {
       <div>
         <h1>Importer un fichier</h1>
         <div className={styles.inputFileContainer}>
-          {fileList &&
-            files.map((file, index) => (
-              <div
-                key={generateKey(file.name)}
-                className={styles.hoverForRemoveCross}
-              >
-                <div className={styles.titleRemoveContainer}>
-                  <p>{file.name}</p>
-                  <X
-                    size="20"
-                    color="#df2525"
-                    className={styles.removeFileSvg}
-                    onClick={handleRemoveFile}
-                    id={index}
-                  />
-                </div>
-                <p>
-                  {file.size} · {file.type.split("/").pop()}
-                </p>
+          {files.map((file) => (
+            <div
+              key={generateKey(file.name)}
+              className={styles.hoverForRemoveCross}
+            >
+              <div className={styles.titleRemoveContainer}>
+                <p>{file.name}</p>
+                <X
+                  size="20"
+                  color="#df2525"
+                  className={styles.removeFileSvg}
+                  onClick={() => handleRemoveFile(file)}
+                />
               </div>
-            ))}
+              <p>
+                {file.size} · {file.type.split("/").pop()}
+              </p>
+            </div>
+          ))}
 
           <label htmlFor="file" className={styles.labelImportFile}>
             <Upload size="25" className={styles.uploadSvg} />
@@ -238,19 +230,9 @@ export const ImportFile = () => {
             inputMode="none"
             checked={isPrivate}
             onChange={() => setIsPrivate((prev) => !prev)}
-            label="Envoyer par email"
+            label="Privé"
             name="isPrivate"
           />
-          {isPrivate && (
-            <InputGroup
-              label="Mail destinataire"
-              name="mailto"
-              type="text"
-              inputMode="email"
-              placeholder="myemail@email.com"
-              disabled={fileLoading}
-            />
-          )}
 
           <button disabled={fileLoading} type="submit">
             {isPrivate ? "Envoyer" : "Obtenir le lien"}
