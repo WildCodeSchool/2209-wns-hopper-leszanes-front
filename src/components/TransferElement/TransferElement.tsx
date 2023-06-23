@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import { useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 import { Transfer } from "../../types/Transfer";
 import { formatDateToLocalFrenchHour } from "../../utils/date";
 import { ToolTip } from "../ToolTip/ToolTip";
@@ -22,13 +22,16 @@ import { deleteCurrentUserTransfer } from "../../graphql/transfer/deleteCurrentU
 import { useToast } from "../../contexts/hooks/ToastContext";
 import { LoadingLayout } from "../LoadingLayout/LoadingLayout";
 import { Dialog } from "../Dialog/Dialog";
-import { EditTransferForm } from "../../views/Transfers/forms/EditTransferForm/EditTransferForm";
+import { EditTransferForm } from "../../views/Transfers/components/EditTransferForm/EditTransferForm";
 import { getFormData } from "../../utils/forms";
 import { updateCurrentUserTransfer } from "../../graphql/transfer/updateCurrentUserTransfer";
-import { EditUsersForm } from "../../views/Transfers/forms/EditUsersForm/EditUsersForm";
+import { EditUsersForm } from "../../views/Transfers/components/EditUsersForm/EditUsersForm";
 import { User } from "../../types/User";
-import { EditFilesForm } from "../../views/Transfers/forms/EditFilesForm/EditFilesForm";
+import { EditFilesForm } from "../../views/Transfers/components/EditFilesForm/EditFilesForm";
 import { File } from "../../types/File";
+import { ShowTransferFiles } from "../../views/Transfers/components/ShowTransferFiles/ShowTransferFiles";
+import { useDownloadAllTransferFiles } from "../../hooks/useDownloadAllTransferFiles";
+import { getCurrentUserTransferFiles } from "../../graphql/transfer/getCurrentUserTransferFiles";
 
 export type TransferElementProps = {
   transferData: Transfer;
@@ -61,6 +64,8 @@ export const TransferElement = ({
   const { user } = useAuth();
   const [isUsersEditDialogOpen, setIsUsersEditDialogOpen] = useState(false);
   const [isFilesEditDialogOpen, setIsFilesEditDialogOpen] = useState(false);
+  const [isShowFilesDialogOpen, setIsShowFilesDialogOpen] = useState(false);
+  const { downloadAllFiles } = useDownloadAllTransferFiles();
 
   const handleDelete = (e: MouseEvent) => {
     e.preventDefault();
@@ -189,6 +194,27 @@ export const TransferElement = ({
     await updateTransfer(data);
   };
 
+  const [getFiles, { error }] = useLazyQuery<{
+    getCurrentUserTransferFiles: File[];
+  }>(getCurrentUserTransferFiles, {
+    variables: {
+      getCurrentUserTransferFilesId: Number(transfer.id),
+    },
+  });
+
+  const handleDownloadAllFiles = async () => {
+    const response = await getFiles();
+    if (error) {
+      createToast({
+        id: "downloadAllFilesError",
+        title: "Téléchargement des fichiers",
+        description: "Une erreur est survenue lors du téléchargement",
+        variant: "error",
+      });
+    }
+    downloadAllFiles(response.data?.getCurrentUserTransferFiles ?? []);
+  };
+
   if (isDeleteLoading) {
     return <LoadingLayout />;
   }
@@ -284,12 +310,15 @@ export const TransferElement = ({
                   </>
                 ) : (
                   <>
-                    <button type="button">
+                    <button
+                      onClick={() => setIsShowFilesDialogOpen(true)}
+                      type="button"
+                    >
                       <ToolTip content="Voir les fichiers">
                         <Files width={20} height={20} />
                       </ToolTip>
                     </button>
-                    <button type="button">
+                    <button onClick={handleDownloadAllFiles} type="button">
                       <ToolTip content="Tout télécharger">
                         <Download width={20} height={20} />
                       </ToolTip>
@@ -361,6 +390,18 @@ export const TransferElement = ({
           isLoading={isUpdateLoading}
           updateFilesTransfer={handleUpdateTransferFiles}
         />
+      </Dialog>
+      <Dialog
+        // style={{
+        //   width: "750px",
+        //   minHeight: "200px",
+        //   maxWidth: "100%",
+        // }}
+        title="Fichiers partagés"
+        onOpenChange={setIsShowFilesDialogOpen}
+        open={isShowFilesDialogOpen}
+      >
+        <ShowTransferFiles transferId={transfer.id} />
       </Dialog>
     </>
   );
