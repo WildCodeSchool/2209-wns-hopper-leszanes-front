@@ -15,7 +15,6 @@ import { createTransfer } from "../../graphql/createTransfer";
 import { createFile } from "../../graphql/file/createFile";
 
 export const ImportFile = () => {
-  let transferId: number;
   const [transferName, setTransferName] = useState<string>("");
   const [completed, setCompleted] = useState<number>(0);
   const [files, setFiles] = useState<File[]>([]);
@@ -39,7 +38,7 @@ export const ImportFile = () => {
 
   const doCreateTransfer = async (name: string, description: string) => {
     try {
-      await doCreateTransferMutation({
+      const res = await doCreateTransferMutation({
         variables: {
           data: {
             name,
@@ -47,15 +46,8 @@ export const ImportFile = () => {
             isPrivate,
           },
         },
-      })
-        .then((res) => {
-          if (res.data) {
-            transferId = Number(res.data.createTransfer.id);
-          }
-        })
-        .catch((err) => {
-          throw new Error(JSON.stringify(err));
-        });
+      });
+      return Number(res.data.createTransfer.id);
     } catch (err) {
       throw new Error(JSON.stringify(err));
     }
@@ -65,7 +57,8 @@ export const ImportFile = () => {
     name: string,
     fileName: string,
     type: string,
-    size: number
+    size: number,
+    transferId: number
   ) => {
     try {
       await doCreateFileMutation({
@@ -98,7 +91,7 @@ export const ImportFile = () => {
     }
   };
 
-  const handleUploadSubmit = (e: UploadFormEvent) => {
+  const handleUploadSubmit = async (e: UploadFormEvent) => {
     e.preventDefault();
     if (files.length <= 0) {
       return;
@@ -107,7 +100,10 @@ export const ImportFile = () => {
     files.forEach((file) => {
       formData.append(`files`, file, file.name);
     });
-    doCreateTransfer(transferName, transferDescription);
+    const transferId = await doCreateTransfer(
+      transferName,
+      transferDescription
+    );
     axios
       .post<{ filesUpload: UploadFilesResponse[] }>(
         "http://localhost:4000/files/upload",
@@ -123,10 +119,11 @@ export const ImportFile = () => {
         if (res.data.filesUpload.length > 0) {
           res.data.filesUpload.forEach((file) => {
             doCreateFile(
-              file.filename,
               file.originalname,
+              file.filename,
               file.mimetype,
-              file.size
+              file.size,
+              transferId
             );
           });
         }

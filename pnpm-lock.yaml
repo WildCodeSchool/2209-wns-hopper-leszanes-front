@@ -61,9 +61,6 @@ devDependencies:
   '@playwright/test':
     specifier: ^1.35.1
     version: 1.35.1
-  '@previewjs/cli':
-    specifier: ^1.23.3
-    version: 1.23.3
   '@testing-library/jest-dom':
     specifier: ^5.16.5
     version: 5.16.5
@@ -797,12 +794,6 @@ packages:
 
   /@polka/url@1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
-    dev: true
-
-  /@previewjs/cli@1.23.3:
-    resolution: {integrity: sha512-JO5YCNUaXLGSiw7jT4YCcwItqFMSpbFrmQOwjkZdsvsD+BeRls9HL4VLR56SMvZU7MVFcVcfKzi/ynPg7WADhw==}
-    engines: {node: ^16.20.0 || ^18 || ^20}
-    hasBin: true
     dev: true
 
   /@radix-ui/number@1.0.1:

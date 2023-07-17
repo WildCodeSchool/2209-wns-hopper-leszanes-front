@@ -8,7 +8,7 @@
     "build": "tsc && vite build --no-watch",
     "preview": "pnpm build && vite preview --host",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,css,md,scss,json} --config ./.prettierrc.yaml",
-    "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx,json}",
+    "lint": "eslint --fix src/**/*.{js,jsx,ts,tsx}",
     "clean": "pnpm format && pnpm lint",
     "coverage": "pnpm build && vitest run --coverage",
     "test": "pnpm build && vitest",
@@ -36,7 +36,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.35.1",
-    "@previewjs/cli": "^1.23.3",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
