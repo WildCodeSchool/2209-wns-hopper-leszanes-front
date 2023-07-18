@@ -11,7 +11,6 @@ export const ContactsView = () => {
   const { data, loading, error } = useQuery<{
     getCurrentUserContacts: User[];
   }>(getCurrentUserContacts);
-  console.log(data);
 
   if (loading) {
     return (

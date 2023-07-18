@@ -50,7 +50,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "contacts",
-        element: <ContactsView />,
+        element: (
+          <AuthRouteGuard>
+            <ContactsView />
+          </AuthRouteGuard>
+        ),
         children: [
           {
             path: ":id",
