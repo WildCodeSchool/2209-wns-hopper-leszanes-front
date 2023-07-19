@@ -56,7 +56,7 @@ export const RegisterView = () => {
             name,
             email,
             password,
-            invitedBy: searchParams.get("invitedBy"),
+            token: searchParams.get("token"),
           },
         },
       });
@@ -77,11 +77,11 @@ export const RegisterView = () => {
             variant: "error",
           });
         }
-        if (searchParams.get("invitedBy")) {
+        if (searchParams.get("token")) {
           try {
             await axios.post("http://localhost:4000/mails/new-contact", {
               email: data.createUser.user.email,
-              invitedBy: searchParams.get("invitedBy"),
+              token: searchParams.get("token"),
             });
           } catch (error) {
             createToast({

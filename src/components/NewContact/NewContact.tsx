@@ -15,6 +15,7 @@ export const NewContact = () => {
     const data = getFormData(event);
     try {
       const response = await axios.post("http://localhost:4000/mails/invite", {
+        userId: user?.id,
         email: data.email,
         invitedBy: user?.email,
       });
