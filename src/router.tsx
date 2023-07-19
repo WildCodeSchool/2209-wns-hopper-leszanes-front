@@ -10,6 +10,9 @@ import { HomeView } from "./views/Home/HomeView";
 import { AuthRouteGuard } from "./components/AuthRouteGuard/AuthRouteGuard";
 import { ImportFile } from "./components/ImportFile/ImportFile";
 import { TransfersView } from "./views/Transfers/TransfersView";
+import { ContactsView } from "./views/Contacts/ContactsView";
+import { Contact } from "./components/Contact/Contact";
+import { NewContact } from "./components/NewContact/NewContact";
 
 export const router = createBrowserRouter([
   {
@@ -31,7 +34,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "upload",
-        element: <ImportFile />,
+        element: (
+          <AuthRouteGuard>
+            <ImportFile />
+          </AuthRouteGuard>
+        ),
       },
       {
         path: "transfers",
@@ -43,7 +50,21 @@ export const router = createBrowserRouter([
       },
       {
         path: "contacts",
-        element: <h1>My contacts</h1>,
+        element: (
+          <AuthRouteGuard>
+            <ContactsView />
+          </AuthRouteGuard>
+        ),
+        children: [
+          {
+            path: ":id",
+            element: <Contact />,
+          },
+          {
+            path: "new",
+            element: <NewContact />,
+          },
+        ],
       },
       {
         path: "login",

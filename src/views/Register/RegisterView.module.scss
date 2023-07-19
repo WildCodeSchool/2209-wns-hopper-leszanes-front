@@ -39,7 +39,9 @@ main:has(.registerContainer) {
     display: flex;
     justify-content: center;
     align-items: center;
-    right: 7px;
     color: $linkHoverColor;
+    width: 24px;
+    height: 24px;
+    right: 10px;
   }
 }

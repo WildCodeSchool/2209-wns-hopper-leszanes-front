@@ -237,13 +237,13 @@ export const TransferElement = ({
                 />
               </div>
               <ChevronDown
+                width={20}
+                height={20}
                 className={styles.transferElement__details__header__icon}
               />
-              <h2>
-                {transfer.id} - {transfer.name}
-              </h2>
+              <h2>{transfer.name}</h2>
             </div>
-            <div>
+            <div className={styles.transferElement__details__header__actions}>
               <div className={styles.transferElement__details__actions}>
                 <span>
                   créé par :{" "}
@@ -307,6 +307,19 @@ export const TransferElement = ({
                         <Trash2 width={20} height={20} />
                       </ToolTip>
                     </button>
+                    <button
+                      onClick={() => setIsShowFilesDialogOpen(true)}
+                      type="button"
+                    >
+                      <ToolTip content="Voir les fichiers">
+                        <Files width={20} height={20} />
+                      </ToolTip>
+                    </button>
+                    <button onClick={handleDownloadAllFiles} type="button">
+                      <ToolTip content="Tout télécharger">
+                        <Download width={20} height={20} />
+                      </ToolTip>
+                    </button>
                   </>
                 ) : (
                   <>
@@ -329,6 +342,9 @@ export const TransferElement = ({
             </div>
           </summary>
           <hr />
+          <h2 className={styles.transferElement__details__title}>
+            {transfer.name}
+          </h2>
           <p className={styles.transferElement__details__description}>
             {transfer.description}
           </p>

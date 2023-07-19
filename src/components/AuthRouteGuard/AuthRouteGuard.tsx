@@ -10,23 +10,24 @@ export const AuthRouteGuard = ({ children }: PropsWithChildren) => {
 
   useMemo(() => {
     if (loading) return;
-    if (user === null) {
+    if (!user) {
       navigate("/login", { replace: true, state: { from: location.pathname } });
     }
   }, [user, location.pathname, navigate, loading]);
 
-  const renderChildren = () => {
+  const renderChildren = useMemo(() => {
     if (loading) {
       return <LoadingLayout />;
     }
-    if (user === null) {
+    if (!user) {
       return (
         <Navigate to="/login" replace state={{ from: location.pathname }} />
       );
     }
 
     return children;
-  };
+  }, [children, loading, location.pathname, user]);
 
-  return <>{renderChildren()}</>;
+  // eslint-disable-next-line react/jsx-no-useless-fragment
+  return <>{renderChildren}</>;
 };
