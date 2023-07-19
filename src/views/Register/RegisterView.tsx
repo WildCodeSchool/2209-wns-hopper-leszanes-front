@@ -1,13 +1,16 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@apollo/client";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import axios from "axios";
 import { InputGroup } from "../../components/InputGroup/InputGroup";
 import styles from "./RegisterView.module.scss";
 import { createUser } from "../../graphql/user/createUser";
 import type { UserWithToken } from "../../types/UserWithToken";
 import { useAuth } from "../../contexts/authContext";
 import { Button } from "../../components/Button/Button";
+import { Link } from "../../components/Link/Link";
+import { useToast } from "../../contexts/hooks/ToastContext";
 
 type RegisterFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -22,12 +25,18 @@ type RegisterResponse = {
 };
 
 export const RegisterView = () => {
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, setUser } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showError, setShowError] = useState(false);
-  const icon = showPassword ? <EyeOff /> : <Eye />;
+  const { createToast } = useToast();
+
+  const icon = useMemo(
+    () => (showPassword ? <EyeOff /> : <Eye />),
+    [showPassword]
+  );
   const [doSignupMutation, { loading }] =
     useMutation<RegisterResponse>(createUser);
 
@@ -47,6 +56,7 @@ export const RegisterView = () => {
             name,
             email,
             password,
+            token: searchParams.get("token"),
           },
         },
       });
@@ -54,6 +64,35 @@ export const RegisterView = () => {
       if (!loading && data) {
         localStorage.setItem("token", data.createUser.token);
         setUser(data.createUser.user);
+        try {
+          await axios.post("http://localhost:4000/mails/new-account", {
+            email: data.createUser.user.email,
+          });
+        } catch (error) {
+          createToast({
+            id: "send-new-account-error",
+            description:
+              "Une erreur est survenue lors de l'envoi du mail de création de compte",
+            title: "Erreur",
+            variant: "error",
+          });
+        }
+        if (searchParams.get("token")) {
+          try {
+            await axios.post("http://localhost:4000/mails/new-contact", {
+              email: data.createUser.user.email,
+              token: searchParams.get("token"),
+            });
+          } catch (error) {
+            createToast({
+              id: "send-contact-error",
+              description:
+                "Une erreur est survenue lors de l'envoi du mail de contact",
+              title: "Erreur",
+              variant: "error",
+            });
+          }
+        }
       }
 
       if (!loading && !data?.createUser) {
@@ -97,6 +136,7 @@ export const RegisterView = () => {
             inputMode="email"
             placeholder="myemail@email.com"
             disabled={loading}
+            defaultValue={searchParams.get("email") ?? ""}
           />
           <InputGroup
             label="Mot de passe"
@@ -104,6 +144,7 @@ export const RegisterView = () => {
             type={showPassword ? "text" : "password"}
             inputMode="text"
             placeholder="My@Password123"
+            iconPosition="right"
             icon={
               <button
                 type="button"
@@ -118,6 +159,7 @@ export const RegisterView = () => {
           <Button disabled={loading} type="submit">
             S'enregistrer
           </Button>
+          <Link to="/login">Se connecter</Link>
         </form>
         {showError && (
           <p>

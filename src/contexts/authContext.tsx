@@ -13,19 +13,19 @@ import type { User } from "../types/User";
 import { getCurrentUser } from "../graphql/user/getCurrentUser";
 
 type AuthContextData = {
-  user: User | null;
-  setUser: (user: User | null) => void;
+  user: User | null | undefined;
+  setUser: (user: User | null | undefined) => void;
   loading: boolean;
 };
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 type GetCurrentUser = {
-  getCurrentUser: User | null;
+  getCurrentUser: User | null | undefined;
 };
 
 const useProvideAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const { data, loading } = useQuery<GetCurrentUser>(getCurrentUser);
 
   const fetchCurentUser = useCallback(() => {

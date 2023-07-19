@@ -1,0 +1,63 @@
+.contactsView {
+  display: grid;
+  grid-template-columns: 25vw 1fr;
+  min-height: 100%;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  position: relative;
+}
+
+.contactsView__aside {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.contactsView__main {
+  border-left: 4px solid #e8e8e8;
+  padding: 25px;
+  background: #fefefe;
+  min-height: calc(100vh - $footerHeight * 2);
+}
+
+.contactsView__contacts {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 90%;
+  max-height: calc(100vh - $footerHeight * 2 - 50px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.contactsView__addContact {
+  background: $accentuatedMainColor;
+  color: #fefefe;
+  padding: 15px 25px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  transition: all 250ms ease-in-out;
+  flex-basis: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+
+  &::after {
+    display: none;
+  }
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background: #222;
+  }
+}
+
+.contactsView__noContacts {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+}
