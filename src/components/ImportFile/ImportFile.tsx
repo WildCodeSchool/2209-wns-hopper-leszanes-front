@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
 import confetti from "canvas-confetti";
@@ -47,7 +47,7 @@ export const ImportFile = () => {
           },
         },
       });
-      return Number(res.data.createTransfer.id);
+      return Number(res.data?.createTransfer.id);
     } catch (err) {
       throw new Error(JSON.stringify(err));
     }
@@ -58,6 +58,7 @@ export const ImportFile = () => {
     fileName: string,
     type: string,
     size: number,
+    signature: string,
     transferId: number
   ) => {
     try {
@@ -68,6 +69,7 @@ export const ImportFile = () => {
             fileName,
             type,
             size,
+            signature,
             transferId,
           },
         },
@@ -105,7 +107,7 @@ export const ImportFile = () => {
       transferDescription
     );
     axios
-      .post<{ filesUpload: UploadFilesResponse[] }>(
+      .post<{ filesWithHash: UploadFilesResponse[] }>(
         "http://localhost:4000/files/upload",
         formData,
         {
@@ -116,13 +118,16 @@ export const ImportFile = () => {
         }
       )
       .then((res) => {
-        if (res.data.filesUpload.length > 0) {
-          res.data.filesUpload.forEach((file) => {
+        console.log(res.data.filesWithHash);
+
+        if (res.data.filesWithHash.length > 0) {
+          res.data.filesWithHash.forEach((file) => {
             doCreateFile(
               file.originalname,
               file.filename,
               file.mimetype,
               file.size,
+              file.signature,
               transferId
             );
           });

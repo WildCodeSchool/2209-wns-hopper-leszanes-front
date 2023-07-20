@@ -3,4 +3,5 @@ export type UploadFilesResponse = {
   originalname: string;
   mimetype: string;
   size: number;
+  signature: string;
 };
