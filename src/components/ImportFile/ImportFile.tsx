@@ -49,7 +49,10 @@ export const ImportFile = () => {
       });
       return Number(res.data?.createTransfer.id);
     } catch (err) {
-      throw new Error(JSON.stringify(err));
+      if(err instanceof Error) {
+        throw new Error(err.message);
+      }
+      throw new Error("Unexpected error occurred when creating file");
     }
   };
 
@@ -81,7 +84,10 @@ export const ImportFile = () => {
         description: "Erreur lors de la création du fichier",
         variant: "error",
       });
-      throw new Error(JSON.stringify(err));
+      if(err instanceof Error) {
+        throw new Error(err.message);
+      }
+      throw new Error("Unexpected error occurred when creating file");
     }
   };
 
