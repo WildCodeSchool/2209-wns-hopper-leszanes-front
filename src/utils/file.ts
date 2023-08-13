@@ -14,5 +14,5 @@ export const humanFileSize = (bytes: number) => {
     theBytes /= 1024;
     u += 1;
   } while (Math.abs(theBytes) >= 1024 && u < units.length - 1);
-  return `${theBytes.toFixed(1)} ${units[u]}`;
+  return `${theBytes.toFixed(1)} ${units[u]}`.replace(".", ",");
 };

@@ -1,0 +1,20 @@
+.buttonsContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 20px;
+}
+
+.transferForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.datePickersContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}

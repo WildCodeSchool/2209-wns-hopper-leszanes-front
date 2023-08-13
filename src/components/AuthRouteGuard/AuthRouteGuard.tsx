@@ -1,19 +1,11 @@
 import { PropsWithChildren, useMemo } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../contexts/authContext";
 import { LoadingLayout } from "../LoadingLayout/LoadingLayout";
 
 export const AuthRouteGuard = ({ children }: PropsWithChildren) => {
-  const navigate = useNavigate();
   const location = useLocation();
   const { user, loading } = useAuth();
-
-  useMemo(() => {
-    if (loading) return;
-    if (!user) {
-      navigate("/login", { replace: true, state: { from: location.pathname } });
-    }
-  }, [user, location.pathname, navigate, loading]);
 
   const renderChildren = useMemo(() => {
     if (loading) {
