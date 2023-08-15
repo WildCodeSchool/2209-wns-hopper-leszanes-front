@@ -1,22 +1,20 @@
 import { Link, NavLink } from "react-router-dom";
 import { LogIn } from "lucide-react";
-import zanelogo from "../../assets/images/zanelogo.png";
 import styles from "./Header.module.scss";
 import { Navbar } from "../Navbar/Navbar";
 import { MobileNavbar } from "../MobileNavbar/MobileNavbar";
 import { useAuth } from "../../contexts/authContext";
 import { UserMenu } from "../UserMenu/UserMenu";
+import { Logo } from "../Logo";
 
 export const Header = () => {
   const { user } = useAuth();
   return (
     <div>
       <header className={styles.header}>
-        <Link to="/">
-          {" "}
-          <img src={zanelogo} alt="" className={styles.logo} />
+        <Link to="/" className={styles.logo}>
+          <Logo width={100} height={70} />
         </Link>
-
         <Navbar />
         {user ? (
           <NavLink to="/profile" className={styles.profileButton}>
@@ -34,7 +32,9 @@ export const Header = () => {
         )}
       </header>
       <header className={styles.responsiveHeader}>
-        <img src={zanelogo} alt="Ztransfert_logo" className={styles.logo} />
+        <Link to="/" className={styles.logo}>
+          <Logo width={100} height={70} />
+        </Link>
         <MobileNavbar />
       </header>
     </div>

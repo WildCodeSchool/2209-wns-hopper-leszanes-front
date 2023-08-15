@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.root {
+  outline: 2px solid #949494;
+  outline-offset: -1px;
+  border: 3px solid transparent;
+  border-radius: 50px;
+  width: 45px;
+  height: 25px;
+  display: flex;
+
+  &[aria-checked="true"] {
+    background: $accentuatedMainColor;
+  }
+
+  &[aria-checked="false"] {
+    background: $mainColor;
+  }
+
+  .thumb {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transform: translateX(0);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.25);
+
+    &[data-state="checked"] {
+      transform: translateX(105%);
+    }
+  }
+}

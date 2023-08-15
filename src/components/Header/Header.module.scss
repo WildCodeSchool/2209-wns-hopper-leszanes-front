@@ -8,9 +8,11 @@
   align-items: center;
   padding-inline: 15px;
 }
+
 .logo {
-  height: 60px;
-  width: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profileButton {

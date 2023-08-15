@@ -1,7 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useMutation } from "@apollo/client";
-import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { InputGroup } from "../../components/InputGroup/InputGroup";
 import styles from "./LoginView.module.scss";
 import { signIn } from "../../graphql/user/singIn";
@@ -9,6 +9,7 @@ import { UserWithToken } from "../../types/UserWithToken";
 import { useAuth } from "../../contexts/authContext";
 import { LoadingLayout } from "../../components/LoadingLayout/LoadingLayout";
 import { Button } from "../../components/Button/Button";
+import { Link } from "../../components/Link/Link";
 
 type SignInFormEvent = FormEvent<HTMLFormElement> & {
   target: HTMLInputElement & {
@@ -96,6 +97,7 @@ export const LoginView = () => {
             placeholder="My@Password123"
             inputMode="text"
             disabled={loading}
+            iconPosition="right"
             icon={
               <button
                 type="button"
@@ -109,9 +111,7 @@ export const LoginView = () => {
           <Button isLoading={loading} type="submit">
             Se connecter
           </Button>
-          <Button isLoading={loading}>
-            <NavLink to="/register">S'enregistrer</NavLink>
-          </Button>
+          <Link to="/register">S'enregistrer</Link>
         </form>
         {loading && <p>Chargement...</p>}
         {!loading && wrongCredentials && (

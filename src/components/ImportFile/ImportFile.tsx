@@ -1,18 +1,17 @@
-import { ChangeEvent, useState } from "react";
-import axios, { AxiosProgressEvent } from "axios";
 import { useMutation } from "@apollo/client";
+import axios, { AxiosProgressEvent } from "axios";
 import confetti from "canvas-confetti";
 import { Upload, X } from "lucide-react";
-import { InputGroup } from "../InputGroup/InputGroup";
-import styles from "./ImportFile.module.scss";
+import { ChangeEvent, useState } from "react";
 import { useToast } from "../../contexts/hooks/ToastContext";
-import { ProgressBar } from "../ProgressBar/ProgressBar";
-import { UploadFilesResponse } from "../../types/UploadFilesResponse";
-import { UploadResponse } from "../../types/UploadResponse";
-import { UploadFormEvent } from "../../types/UploadFormEvent";
-import { CreateTransferResponse } from "../../types/CreateTransferResponse";
 import { createTransfer } from "../../graphql/createTransfer";
 import { createFile } from "../../graphql/file/createFile";
+import { CreateTransferResponse } from "../../types/CreateTransferResponse";
+import { UploadFilesResponse } from "../../types/UploadFilesResponse";
+import { UploadFormEvent } from "../../types/UploadFormEvent";
+import { UploadResponse } from "../../types/UploadResponse";
+import { InputGroup } from "../InputGroup/InputGroup";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 
 export const ImportFile = () => {
   const [transferName, setTransferName] = useState<string>("");
@@ -49,7 +48,7 @@ export const ImportFile = () => {
       });
       return Number(res.data?.createTransfer.id);
     } catch (err) {
-      if(err instanceof Error) {
+      if (err instanceof Error) {
         throw new Error(err.message);
       }
       throw new Error("Unexpected error occurred when creating file");
@@ -84,7 +83,7 @@ export const ImportFile = () => {
         description: "Erreur lors de la création du fichier",
         variant: "error",
       });
-      if(err instanceof Error) {
+      if (err instanceof Error) {
         throw new Error(err.message);
       }
       throw new Error("Unexpected error occurred when creating file");
@@ -124,8 +123,6 @@ export const ImportFile = () => {
         }
       )
       .then((res) => {
-        console.log(res.data.filesWithHash);
-
         if (res.data.filesWithHash.length > 0) {
           res.data.filesWithHash.forEach((file) => {
             doCreateFile(

@@ -9,11 +9,12 @@
   border-radius: 15px;
   padding-block: 10px;
   font-weight: 500;
-  box-shadow: 0px 0px 3px 0px rgba(123, 123, 123, 0.75);
+  box-shadow: 0 0 3px 0 rgba(123, 123, 123, 0.75);
   cursor: pointer;
   transition: all 0.3s ease-in-out;
   outline: 3px solid transparent;
   outline-offset: 3px;
+  user-select: none;
 
   &:hover {
     background: $accentuatedMainColor;
@@ -21,7 +22,11 @@
   &:focus-visible {
     outline-color: $accentuatedMainColor;
   }
-  user-select: none;
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 
 .button__destructive {

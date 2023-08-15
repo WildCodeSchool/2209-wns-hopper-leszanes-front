@@ -1,0 +1,8 @@
+.contact {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: calc(100vh - $headerHeight * 2 - 50px);
+  gap: 25px;
+}

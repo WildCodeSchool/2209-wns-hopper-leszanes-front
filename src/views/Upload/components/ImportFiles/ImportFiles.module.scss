@@ -1,0 +1,71 @@
+.importFiles {
+  min-height: calc(100vh - $footerHeight * 2 - 135px);
+  display: flex;
+  flex-direction: column;
+}
+
+.importFilesLabel {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 2px dashed #9d9d9d;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  flex-basis: 20%;
+
+  input {
+    display: none;
+  }
+
+  svg {
+    padding: 20px;
+    background: #9d9d9d;
+  }
+
+  button {
+    padding: 0;
+    border-radius: 0;
+    height: 65px;
+
+    svg {
+      background: none;
+    }
+  }
+  h2 {
+    width: 100%;
+  }
+}
+
+.buttonsContainer {
+  display: flex;
+
+  .button {
+    padding-inline: 15px;
+  }
+}
+
+.filesList {
+  flex: 1;
+  overflow: hidden;
+  flex-basis: 80%;
+
+  &:has(.empty) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  iframe {
+    width: 100%;
+  }
+}
