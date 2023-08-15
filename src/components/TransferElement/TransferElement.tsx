@@ -1,9 +1,11 @@
+import { useLazyQuery, useMutation } from "@apollo/client";
 import {
   ChevronDown,
   Clock,
   Download,
   Edit2,
   Files,
+  Link2Icon,
   Lock,
   Trash2,
   Unlock,
@@ -11,27 +13,27 @@ import {
 } from "lucide-react";
 import { FormEvent, MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { Transfer } from "../../types/Transfer";
-import { formatDateToLocalFrenchHour } from "../../utils/date";
-import { ToolTip } from "../ToolTip/ToolTip";
 import { useAuth } from "../../contexts/authContext";
-import styles from "./TransferElement.module.scss";
-import { ConfirmDialog } from "../ConfirmDialog/ConfirmDialog";
-import { deleteCurrentUserTransfer } from "../../graphql/transfer/deleteCurrentUserTransfer";
 import { useToast } from "../../contexts/hooks/ToastContext";
-import { LoadingLayout } from "../LoadingLayout/LoadingLayout";
-import { Dialog } from "../Dialog/Dialog";
-import { EditTransferForm } from "../../views/Transfers/components/EditTransferForm/EditTransferForm";
-import { getFormData } from "../../utils/forms";
-import { updateCurrentUserTransfer } from "../../graphql/transfer/updateCurrentUserTransfer";
-import { EditUsersForm } from "../../views/Transfers/components/EditUsersForm/EditUsersForm";
-import { User } from "../../types/User";
-import { EditFilesForm } from "../../views/Transfers/components/EditFilesForm/EditFilesForm";
-import { File } from "../../types/File";
-import { ShowTransferFiles } from "../../views/Transfers/components/ShowTransferFiles/ShowTransferFiles";
-import { useDownloadAllTransferFiles } from "../../hooks/useDownloadAllTransferFiles";
+import { deleteCurrentUserTransfer } from "../../graphql/transfer/deleteCurrentUserTransfer";
 import { getCurrentUserTransferFiles } from "../../graphql/transfer/getCurrentUserTransferFiles";
+import { getCurrentUserTransferLink } from "../../graphql/transfer/getCurrentUserTransferLink";
+import { updateCurrentUserTransfer } from "../../graphql/transfer/updateCurrentUserTransfer";
+import { useDownloadAllTransferFiles } from "../../hooks/useDownloadAllTransferFiles";
+import { File } from "../../types/File";
+import { Transfer } from "../../types/Transfer";
+import { User } from "../../types/User";
+import { formatDateToLocalFrenchHour } from "../../utils/date";
+import { getFormData } from "../../utils/forms";
+import { EditFilesForm } from "../../views/Transfers/components/EditFilesForm/EditFilesForm";
+import { EditTransferForm } from "../../views/Transfers/components/EditTransferForm/EditTransferForm";
+import { EditUsersForm } from "../../views/Transfers/components/EditUsersForm/EditUsersForm";
+import { ShowTransferFiles } from "../../views/Transfers/components/ShowTransferFiles/ShowTransferFiles";
+import { ConfirmDialog } from "../ConfirmDialog/ConfirmDialog";
+import { Dialog } from "../Dialog/Dialog";
+import { LoadingLayout } from "../LoadingLayout/LoadingLayout";
+import { ToolTip } from "../ToolTip/ToolTip";
+import styles from "./TransferElement.module.scss";
 
 export type TransferElementProps = {
   transferData: Transfer;
@@ -149,8 +151,17 @@ export const TransferElement = ({
             name: response.updateCurrentUserTransfer.name,
             description: response.updateCurrentUserTransfer.description,
             updatedAt: response.updateCurrentUserTransfer.updatedAt,
-            users: response.updateCurrentUserTransfer.users,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            users: transfer.isPrivate
+              ? // @ts-expect-error users sould be defined
+                response.updateCurrentUserTransfer.users
+              : undefined,
             files: response.updateCurrentUserTransfer.files,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            link: !transfer.isPrivate
+              ? // @ts-expect-error link sould be defined
+                response.updateCurrentUserTransfer.link
+              : undefined,
           };
         });
         setIsEditDialogOpen(false);
@@ -202,6 +213,14 @@ export const TransferElement = ({
     },
   });
 
+  const [getLink, { error: getLinkError }] = useLazyQuery<{
+    getCurrentUserTransferLink: { token: string };
+  }>(getCurrentUserTransferLink, {
+    variables: {
+      getCurrentUserTransferLinkId: Number(transfer.id),
+    },
+  });
+
   const handleDownloadAllFiles = async () => {
     const response = await getFiles();
     if (error) {
@@ -213,6 +232,42 @@ export const TransferElement = ({
       });
     }
     downloadAllFiles(response.data?.getCurrentUserTransferFiles ?? []);
+  };
+
+  const handleCopyLink = async () => {
+    const response = await getLink();
+    if (getLinkError) {
+      createToast({
+        id: "getLinkError",
+        title: "Récupération du lien",
+        description: "Une erreur est survenue lors de la récupération du lien",
+        variant: "error",
+      });
+    }
+    const token = response.data?.getCurrentUserTransferLink.token;
+    if (token) {
+      const encodedToken = token.replaceAll(".", "-");
+      try {
+        await navigator.clipboard.writeText(
+          `${window.location.origin}/download/${encodedToken}`
+        );
+        createToast({
+          id: "copyLinkSuccess",
+          title: "Copie du lien",
+          description: "Le lien a bien été copié",
+          variant: "success",
+        });
+      } catch (err) {
+        if (err instanceof DOMException) {
+          createToast({
+            id: "copyLinkError",
+            title: "Copie du lien",
+            description: "Une erreur est survenue lors de la copie du lien",
+            variant: "error",
+          });
+        }
+      }
+    }
   };
 
   if (isDeleteLoading) {
@@ -275,14 +330,23 @@ export const TransferElement = ({
                         <Unlock width={20} height={20} />
                       </ToolTip>
                     )}
-                    <button
-                      type="button"
-                      onClick={() => setIsUsersEditDialogOpen(true)}
-                    >
-                      <ToolTip content="Partagé avec">
-                        <Users width={20} height={20} />
-                      </ToolTip>
-                    </button>
+                    {transfer.isPrivate ? (
+                      <button
+                        type="button"
+                        onClick={() => setIsUsersEditDialogOpen(true)}
+                      >
+                        <ToolTip content="Partagé avec">
+                          <Users width={20} height={20} />
+                        </ToolTip>
+                      </button>
+                    ) : (
+                      <button type="button" onClick={handleCopyLink}>
+                        <ToolTip content="Copier le lien">
+                          <Link2Icon width={20} height={20} />
+                        </ToolTip>
+                      </button>
+                    )}
+
                     <button
                       onClick={() => setIsFilesEditDialogOpen(true)}
                       type="button"

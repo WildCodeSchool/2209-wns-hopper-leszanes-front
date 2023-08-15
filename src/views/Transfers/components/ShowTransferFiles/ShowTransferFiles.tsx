@@ -34,7 +34,7 @@ export const ShowTransferFiles = forwardRef(
       initualLoadingRef.current = true;
     }, []);
     const [selectedFiles, setSelectedFiles] = useState<
-      { fileName: string; name: string }[]
+      { fileName: string; name: string; signature: string }[]
     >([]);
 
     const handleSelectAll = () => {
@@ -46,6 +46,7 @@ export const ShowTransferFiles = forwardRef(
             return {
               fileName: file.fileName,
               name: file.name,
+              signature: file.signature,
             };
           })
         );
@@ -65,6 +66,7 @@ export const ShowTransferFiles = forwardRef(
           {
             fileName: file.fileName,
             name: file.name,
+            signature: file.signature,
           },
         ]);
       }
@@ -139,7 +141,11 @@ export const ShowTransferFiles = forwardRef(
                     icon={<Download width={15} height={15} />}
                     onClick={() =>
                       download(
-                        { fileName: file.fileName, name: file.name },
+                        {
+                          fileName: file.fileName,
+                          name: file.name,
+                          signature: file.signature,
+                        },
                         transferFiles
                       )
                     }

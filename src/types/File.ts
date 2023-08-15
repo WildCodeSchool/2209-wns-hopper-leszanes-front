@@ -6,6 +6,7 @@ export type File = {
   fileName: string;
   size: number;
   type: string;
+  signature: string;
   createdAt: string;
   updatedAt: string;
   transfer?: Transfer;

@@ -21,7 +21,7 @@ export const Navbar = () => {
         <li>
           <NavLink to="/upload" data-testid="upload">
             <Upload size="30" />
-            <span data-test-id="Upload">Upload</span>
+            <span data-test-id="Upload">Envoyer</span>
           </NavLink>
         </li>
         <li>
