@@ -80,6 +80,7 @@ export const UploadView = () => {
     fileName: string,
     type: string,
     size: number,
+    signature: string,
     transferId: number
   ) => {
     try {
@@ -90,6 +91,7 @@ export const UploadView = () => {
             fileName,
             type,
             size,
+            signature,
             transferId,
           },
         },
@@ -101,7 +103,10 @@ export const UploadView = () => {
         description: "Erreur lors de la création du fichier",
         variant: "error",
       });
-      throw new Error(JSON.stringify(err));
+      if (err instanceof Error) {
+        throw new Error(err.message);
+      }
+      throw new Error("Unexpected error occurred when creating file");
     }
   };
 
@@ -119,7 +124,7 @@ export const UploadView = () => {
       createToast({
         id: "upload-error",
         title: "Une erreur est survenue",
-        description: "Aucun fichier à uploader",
+        description: "Aucun fichier à mettre en ligne",
         variant: "error",
       });
       return;
@@ -136,7 +141,7 @@ export const UploadView = () => {
       transferEndDate
     );
     axios
-      .post<{ filesUpload: UploadFilesResponse[] }>(
+      .post<{ filesWithHash: UploadFilesResponse[] }>(
         "http://localhost:4000/files/upload",
         formData,
         {
@@ -147,13 +152,14 @@ export const UploadView = () => {
         }
       )
       .then((res) => {
-        if (res.data.filesUpload.length > 0) {
-          res.data.filesUpload.forEach((file) => {
+        if (res.data.filesWithHash.length > 0) {
+          res.data.filesWithHash.forEach((file) => {
             doCreateFile(
               file.originalname,
               file.filename,
               file.mimetype,
               file.size,
+              file.signature,
               transferId
             );
           });
