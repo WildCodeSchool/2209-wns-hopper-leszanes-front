@@ -1,18 +1,19 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Layout } from "./components/Layout/Layout";
-import { ErrorView } from "./views/Error/ErrorView";
-import { UnauthorizedView } from "./views/Unauthorized/UnauthorizedView";
-import { NotFoundView } from "./views/NotFound/NotFoundView";
-import { LoginView } from "./views/Login/LoginView";
-import { RegisterView } from "./views/Register/RegisterView";
-import { UserProfileView } from "./views/UserProfile/UserProfileView";
-import { HomeView } from "./views/Home/HomeView";
 import { AuthRouteGuard } from "./components/AuthRouteGuard/AuthRouteGuard";
-import { ImportFile } from "./components/ImportFile/ImportFile";
-import { TransfersView } from "./views/Transfers/TransfersView";
-import { ContactsView } from "./views/Contacts/ContactsView";
 import { Contact } from "./components/Contact/Contact";
+import { Layout } from "./components/Layout/Layout";
 import { NewContact } from "./components/NewContact/NewContact";
+import { ContactsView } from "./views/Contacts/ContactsView";
+import { DownloadView } from "./views/Download/DownloadView";
+import { ErrorView } from "./views/Error/ErrorView";
+import { HomeView } from "./views/Home/HomeView";
+import { LoginView } from "./views/Login/LoginView";
+import { NotFoundView } from "./views/NotFound/NotFoundView";
+import { RegisterView } from "./views/Register/RegisterView";
+import { TransfersView } from "./views/Transfers/TransfersView";
+import { UnauthorizedView } from "./views/Unauthorized/UnauthorizedView";
+import { UploadView } from "./views/Upload/UploadView";
+import { UserProfileView } from "./views/UserProfile/UserProfileView";
 
 export const router = createBrowserRouter([
   {
@@ -36,7 +37,7 @@ export const router = createBrowserRouter([
         path: "upload",
         element: (
           <AuthRouteGuard>
-            <ImportFile />
+            <UploadView />
           </AuthRouteGuard>
         ),
       },
@@ -74,6 +75,11 @@ export const router = createBrowserRouter([
       {
         path: "register",
         element: <RegisterView />,
+        errorElement: <ErrorView />,
+      },
+      {
+        path: "download/:token",
+        element: <DownloadView />,
         errorElement: <ErrorView />,
       },
     ],

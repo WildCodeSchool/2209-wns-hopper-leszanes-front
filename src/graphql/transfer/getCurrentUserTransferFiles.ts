@@ -8,6 +8,7 @@ export const getCurrentUserTransferFiles = gql`
       fileName
       size
       type
+      signature
       createdAt
       updatedAt
     }

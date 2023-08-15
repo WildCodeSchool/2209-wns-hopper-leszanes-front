@@ -7,8 +7,8 @@ export const useFiles = () => {
 
   const download = async (
     filesData:
-      | { fileName: string; name: string }
-      | { fileName: string; name: string }[],
+      | { fileName: string; name: string; signature: string }
+      | { fileName: string; name: string; signature: string }[],
     fileList: File[]
   ) => {
     let name = "files.zip";
